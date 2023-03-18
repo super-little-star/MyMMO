@@ -1,0 +1,42 @@
+syntax = "proto3";
+option go_package = "./Protocol;ProtoMessage";
+option csharp_namespace = "ProtoMessage";
+package ProtoMessage;
+
+////////////////////////////////////////////////////////////////
+//
+//  Data Basic
+//
+////////////////////////////////////////////////////////////////
+
+enum RESULT {
+    SUCCESS = 0;
+    FAILED = 1;
+}
+
+////////////////////////////////////////////////////////////////
+//
+//  Messages
+//
+////////////////////////////////////////////////////////////////
+message NetMessage {
+    NetMessageRequest request = 1;
+    NetMessageResponse response = 2;
+}
+
+message NetMessageRequest{
+    UserRegisterRequest userRegister = 1;
+}
+
+message NetMessageResponse{
+    UserRegisterResponse userRegister = 1;
+}
+
+message UserRegisterRequest {
+    string userName = 1;
+    string passward = 2;
+}
+message UserRegisterResponse {
+    RESULT result = 1;
+    string errormsg = 2;
+}
