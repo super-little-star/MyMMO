@@ -12,7 +12,8 @@ type config interface {
 var ProjectCfg *ProjectConfig
 
 type ProjectConfig struct {
-	DevelopmentMode bool `ini:"DevelopmentMode"`
+	DevelopmentMode bool   `ini:"DevelopmentMode"`
+	MaxPackageSize  uint32 `ini:"MaxPackageSize"`
 }
 
 func (pc *ProjectConfig) Load(cfg *ini.File) {
@@ -38,9 +39,9 @@ func (mc *MySQLConfig) Load(cfg *ini.File) {
 func LoadConfig(cfg *ini.File, section string, v interface{}) {
 	err := cfg.Section(section).MapTo(v)
 	if err != nil {
-		log.Fatalf("[Error]Config Match to [%s] is err : %v", section, err)
+		log.Fatalf("[Error]config Match to [%s] is err : %v", section, err)
 	}
-	log.Printf("[Info]Config Match to [%s] is success!!", section)
+	log.Printf("[Info]config Match to [%s] is success!!", section)
 }
 
 func LoadConfigs(cfg *ini.File, configs ...config) {
@@ -50,7 +51,7 @@ func LoadConfigs(cfg *ini.File, configs ...config) {
 }
 
 func Init() {
-	cfgF, err := ini.Load("./Config/Config.ini")
+	cfgF, err := ini.Load("./config/config.ini")
 	if err != nil {
 		log.Fatalln("Fail to read config , err is :", err)
 	}
