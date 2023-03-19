@@ -12,8 +12,7 @@ type config interface {
 var ProjectCfg *ProjectConfig
 
 type ProjectConfig struct {
-	DevelopmentMode bool   `ini:"DevelopmentMode"`
-	MaxPackageSize  uint32 `ini:"MaxPackageSize"`
+	DevelopmentMode bool `ini:"DevelopmentMode"`
 }
 
 func (pc *ProjectConfig) Load(cfg *ini.File) {

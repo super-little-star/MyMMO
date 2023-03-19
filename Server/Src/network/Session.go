@@ -8,6 +8,10 @@ type GSession struct {
 	response *ProtoMessage.NetMessage
 }
 
+func NewSession() *GSession {
+	return &GSession{}
+}
+
 func (ns *GSession) Disconnected() {
 	// TODO 会话断开后的处理
 }
