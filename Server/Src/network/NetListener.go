@@ -35,7 +35,7 @@ func (ntl *GNetListener) AcceptConn() *net.TCPConn {
 		mlog.Error.Println("Accept connect err : ", err)
 		return nil
 	}
-	mlog.Info.Printf("New Client[%s] Connection ", conn.RemoteAddr())
+	mlog.Info.Printf("New Client[%s] Connection ....\n", conn.RemoteAddr())
 	return conn
 }
 

@@ -33,7 +33,7 @@ func (ns *GNetServer) acceptConn() {
 		}
 		session := NewSession()
 		connection := NewConnection(conn, session)
-		mlog.Info.Printf("Client[%s] is Connected....", connection.conn.RemoteAddr())
+		mlog.Info.Printf("Client[%s] is Connected....\n", connection.conn.RemoteAddr())
 
 	}
 }
