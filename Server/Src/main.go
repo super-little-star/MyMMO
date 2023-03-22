@@ -21,5 +21,4 @@ func main() {
 	mlog.Info.Println("=====Game server is Running=====")
 	command.Run()
 	gameServer.Stop()
-
 }
