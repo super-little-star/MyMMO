@@ -12,7 +12,8 @@ type config interface {
 var ProjectCfg *ProjectConfig
 
 type ProjectConfig struct {
-	DevelopmentMode bool `ini:"DevelopmentMode"`
+	DevelopmentMode bool   `ini:"DevelopmentMode"`
+	CurrVersion     string `ini:"CurrVersion"`
 }
 
 func (pc *ProjectConfig) Load(cfg *ini.File) {
