@@ -13,7 +13,7 @@ func init() {
 }
 
 func main() {
-	gameServer := &server.GGameServer{IsRunning: false}
+	gameServer := &server.GGameServer{}
 	gameServer.Init()
 	gameServer.Start()
 	mlog.Info.Println("=====Game server is Running=====")

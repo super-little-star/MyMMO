@@ -5,28 +5,32 @@ import (
 )
 
 type GNetServer struct {
-	ServerListener *GNetListener
+	isRunning      bool
+	ServerListener *GNetTCPListener
 }
 
 // Init 初始化网络服务
 func (ns *GNetServer) Init(network string, address string) {
+	ns.isRunning = false
 	ns.ServerListener = NewListener(network, address)
 	mlog.Info.Printf("Start Listen success. Listen to [%s]", ns.ServerListener.addr.String())
 }
 
 // Start 开启网络服务
 func (ns *GNetServer) Start() {
+	ns.isRunning = true
 	go ns.acceptConn() // 开启一个协程接受客户端的链接
 }
 
 // Stop 关闭网络服务
 func (ns *GNetServer) Stop() {
+	ns.isRunning = false
 	ns.ServerListener.Close()
 }
 
 // 接受来自客户端的链接
 func (ns *GNetServer) acceptConn() {
-	for {
+	for ns.isRunning {
 		conn := ns.ServerListener.AcceptConn()
 		if conn == nil {
 			continue
@@ -34,6 +38,5 @@ func (ns *GNetServer) acceptConn() {
 		session := NewSession()
 		connection := NewConnection(conn, session)
 		mlog.Info.Printf("Client[%s] is Connected....\n", connection.conn.RemoteAddr())
-
 	}
 }

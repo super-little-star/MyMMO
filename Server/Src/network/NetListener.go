@@ -5,31 +5,31 @@ import (
 	"net"
 )
 
-type GNetListener struct {
+type GNetTCPListener struct {
 	listener *net.TCPListener
 	addr     *net.TCPAddr
 }
 
-func NewListener(network string, address string) *GNetListener {
+func NewListener(network string, address string) *GNetTCPListener {
 	a, err := net.ResolveTCPAddr(network, address)
 	if err != nil {
 		mlog.Error.Fatalln("resolve tcp address is err : ", err)
 		return nil
 	}
 
-	l, err := net.ListenTCP(network, a)
-	if err != nil {
-		mlog.Error.Fatalln("create tcp listener is err : ", err)
+	l, err2 := net.ListenTCP(network, a)
+	if err2 != nil {
+		mlog.Error.Fatalln("create tcp listener is err : ", err2)
 		return nil
 	}
 
-	return &GNetListener{
+	return &GNetTCPListener{
 		listener: l,
 		addr:     a,
 	}
 }
 
-func (ntl *GNetListener) AcceptConn() *net.TCPConn {
+func (ntl *GNetTCPListener) AcceptConn() *net.TCPConn {
 	conn, err := ntl.listener.AcceptTCP()
 	if err != nil {
 		mlog.Error.Println("Accept connect err : ", err)
@@ -39,6 +39,9 @@ func (ntl *GNetListener) AcceptConn() *net.TCPConn {
 	return conn
 }
 
-func (ntl *GNetListener) Close() {
-	ntl.Close()
+func (ntl *GNetTCPListener) Close() {
+	if err := ntl.listener.Close(); err != nil {
+		mlog.Error.Println("TCP Listener Close is error : ", err)
+		return
+	}
 }
