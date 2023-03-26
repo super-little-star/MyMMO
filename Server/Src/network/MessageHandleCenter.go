@@ -8,22 +8,22 @@ import (
 	"time"
 )
 
-type MessagePackage struct {
+type GMessagePackage struct {
 	sender  *GConnection
 	message *ProtoMessage.NetMessage
 }
 
-type MessageHandleCenter struct {
-	ChanMessages           chan *MessagePackage
+type GMessageHandleCenter struct {
+	ChanMessages           chan *GMessagePackage
 	messageEvents          map[string]func(sender *GConnection, message interface{})
 	isRunning              bool
-	goroutinesCount        uint32
-	runningGoroutinesCount uint32
+	goroutinesCount        int32
+	runningGoroutinesCount int32
 }
 
 // Init 初始化消息处理中心
-func (m *MessageHandleCenter) Init() {
-	m.ChanMessages = make(chan *MessagePackage, 1000)
+func (m *GMessageHandleCenter) Init() {
+	m.ChanMessages = make(chan *GMessagePackage, 1000)
 	m.messageEvents = make(map[string]func(sender *GConnection, message interface{}))
 	m.isRunning = false
 	m.goroutinesCount = 0
@@ -35,7 +35,7 @@ func (m *MessageHandleCenter) Init() {
 //	@Description: 开启消息处理中心
 //	@receiver m
 //	@param count 需要开启Goroutine的数量
-func (m *MessageHandleCenter) Start(count uint32) {
+func (m *GMessageHandleCenter) Start(count int32) {
 	m.isRunning = true
 
 	if count <= 1 {
@@ -46,7 +46,7 @@ func (m *MessageHandleCenter) Start(count uint32) {
 		m.goroutinesCount = count
 	}
 
-	for i := uint32(1); i <= m.goroutinesCount; i++ {
+	for i := int32(1); i <= m.goroutinesCount; i++ {
 		go m.MessageDelivery()
 	}
 
@@ -59,7 +59,7 @@ func (m *MessageHandleCenter) Start(count uint32) {
 //
 //	@Description: 停止消息处理中心
 //	@receiver m
-func (m *MessageHandleCenter) Stop() {
+func (m *GMessageHandleCenter) Stop() {
 	close(m.ChanMessages)
 	m.isRunning = false
 	for m.runningGoroutinesCount > 0 {
@@ -68,10 +68,10 @@ func (m *MessageHandleCenter) Stop() {
 }
 
 // MessageDelivery 发送消息，将ChanMessage里的消息发送给对应的服务器进行处理
-func (m *MessageHandleCenter) MessageDelivery() {
+func (m *GMessageHandleCenter) MessageDelivery() {
 	//使用原子变量对运行的Goroutines计数
-	atomic.AddUint32(&m.runningGoroutinesCount, 1)
-	defer atomic.AddUint32(&m.runningGoroutinesCount, -1)
+	atomic.AddInt32(&m.runningGoroutinesCount, 1)
+	defer atomic.AddInt32(&m.runningGoroutinesCount, -1)
 	for {
 		select {
 		case _, ok := <-m.ChanMessages:
@@ -86,8 +86,8 @@ func (m *MessageHandleCenter) MessageDelivery() {
 	}
 }
 
-func (m *MessageHandleCenter) AcceptMessage(sender *GConnection, message *ProtoMessage.NetMessage) {
-	m.ChanMessages <- &MessagePackage{
+func (m *GMessageHandleCenter) AcceptMessage(sender *GConnection, message *ProtoMessage.NetMessage) {
+	m.ChanMessages <- &GMessagePackage{
 		sender:  sender,
 		message: message,
 	}
@@ -99,7 +99,7 @@ func (m *MessageHandleCenter) AcceptMessage(sender *GConnection, message *ProtoM
 //	@receiver m
 //	@param sender 发送者
 //	@param mes 消息
-func (m *MessageHandleCenter) TriggerEvents(sender *GConnection, mes interface{}) {
+func (m *GMessageHandleCenter) TriggerEvents(sender *GConnection, mes interface{}) {
 	key := reflect.TypeOf(mes).Name()
 	event, ok := m.messageEvents[key]
 	if ok {
@@ -109,13 +109,13 @@ func (m *MessageHandleCenter) TriggerEvents(sender *GConnection, mes interface{}
 	}
 }
 
-// Register
+// Login
 //
 //	@Description: 注册信息对应的事件
 //	@receiver m
 //	@param msg 信息
 //	@param event 事件
-func (m *MessageHandleCenter) Register(msg interface{}, event func(sender *GConnection, msg interface{})) {
+func (m *GMessageHandleCenter) Login(msg interface{}, event func(sender *GConnection, msg interface{})) {
 	key := reflect.TypeOf(msg).Name()
 	if m.messageEvents[key] != nil {
 		m.messageEvents[key] = nil
@@ -130,7 +130,7 @@ func (m *MessageHandleCenter) Register(msg interface{}, event func(sender *GConn
 //	@receiver m
 //	@param msg 信息
 //	@param event 事件
-func (m *MessageHandleCenter) Logoff(msg interface{}) {
+func (m *GMessageHandleCenter) Logoff(msg interface{}) {
 	key := reflect.TypeOf(msg).Name()
 	m.messageEvents[key] = nil
 }

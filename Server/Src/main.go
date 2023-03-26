@@ -10,9 +10,9 @@ import (
 )
 
 func init() {
-	singleton.InitSingleton()
 	globalConfig.Init()
 	mlog.Init()
+	singleton.InitSingleton()
 }
 
 func main() {
@@ -23,5 +23,4 @@ func main() {
 	mlog.Info.Println("=====Game server is Running=====")
 	command.Run()
 	gameServer.Stop()
-
 }
