@@ -19,7 +19,8 @@ func (ns *GNetServer) Init(network string, address string) {
 // Start 开启网络服务
 func (ns *GNetServer) Start() {
 	ns.isRunning = true
-	go ns.acceptConn() // 开启一个协程接受客户端的链接
+	Instance().MessageHandleCenter.Start(10) //开启10个Goroutine处理消息
+	go ns.acceptConn()                       // 开启一个协程接受客户端的链接
 }
 
 // Stop 关闭网络服务

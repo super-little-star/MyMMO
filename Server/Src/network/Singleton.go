@@ -1,13 +1,13 @@
-package singleton
+package network
 
 import (
-	"mmo_server/network"
 	"mmo_server/utils/mlog"
 	"sync"
 )
 
 type singleton struct {
-	MessageHandleCenter *network.GMessageHandleCenter
+	MessageHandleCenter *GMessageHandleCenter
+	MessageHandOut      *GMessageHandOut
 }
 
 var once sync.Once
@@ -16,9 +16,10 @@ var instance *singleton
 func InitSingleton() {
 	once.Do(func() {
 		instance = &singleton{
-			MessageHandleCenter: &network.GMessageHandleCenter{},
+			MessageHandleCenter: &GMessageHandleCenter{},
+			MessageHandOut:      &GMessageHandOut{},
 		}
-		mlog.Info.Println("Singleton Init success...")
+		mlog.Info.Println("network package Singleton Init success...")
 	})
 }
 func Instance() *singleton {

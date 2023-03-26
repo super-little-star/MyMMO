@@ -2,7 +2,6 @@ package network
 
 import (
 	ProtoMessage "mmo_server/protocol"
-	"mmo_server/utils/singleton"
 )
 
 type GMessageHandOut struct {
@@ -13,7 +12,7 @@ func (mh *GMessageHandOut) HandOutResponse(sender *GConnection, response *ProtoM
 		return
 	}
 	if response.UserRegister != nil {
-		singleton.Instance().MessageHandleCenter.TriggerEvents(sender, response.UserRegister)
+		Instance().MessageHandleCenter.TriggerEvents(sender, response.UserRegister)
 	}
 }
 
@@ -22,7 +21,7 @@ func (mh *GMessageHandOut) HandOutRequest(sender *GConnection, request *ProtoMes
 		return
 	}
 	if request.UserRegister != nil {
-		singleton.Instance().MessageHandleCenter.TriggerEvents(sender, request.UserRegister)
+		Instance().MessageHandleCenter.TriggerEvents(sender, request.UserRegister)
 	}
 
 }

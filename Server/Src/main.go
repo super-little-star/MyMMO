@@ -2,17 +2,17 @@ package main
 
 import (
 	"fmt"
+	"mmo_server/network"
 	"mmo_server/server"
 	"mmo_server/utils/command"
 	"mmo_server/utils/globalConfig"
 	"mmo_server/utils/mlog"
-	"mmo_server/utils/singleton"
 )
 
 func init() {
 	globalConfig.Init()
 	mlog.Init()
-	singleton.InitSingleton()
+	network.InitSingleton()
 }
 
 func main() {
