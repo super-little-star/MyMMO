@@ -19,6 +19,8 @@ func InitSingleton() {
 			MessageHandleCenter: &GMessageHandleCenter{},
 			MessageHandOut:      &GMessageHandOut{},
 		}
+		instance.MessageHandleCenter.Init()
+		instance.MessageHandOut.Init()
 		mlog.Info.Println("network package Singleton Init success...")
 	})
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"mmo_server/network"
 	"mmo_server/server"
 	"mmo_server/utils/command"
@@ -12,11 +11,12 @@ import (
 func init() {
 	globalConfig.Init()
 	mlog.Init()
+	// 各个包单例模式初始化
 	network.InitSingleton()
 }
 
 func main() {
-	fmt.Printf("Game Server Current Version [%s]\n", globalConfig.ProjectCfg.CurrVersion)
+	mlog.Info.Printf("Game Server Current Version [%s]\n", globalConfig.ProjectCfg.CurrVersion)
 	gameServer := &server.GGameServer{}
 	gameServer.Init()
 	gameServer.Start()

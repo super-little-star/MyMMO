@@ -3,7 +3,6 @@ package network
 import (
 	ProtoMessage "mmo_server/protocol"
 	"mmo_server/utils/mlog"
-	"reflect"
 	"sync/atomic"
 	"time"
 )
@@ -14,20 +13,18 @@ type GMessagePackage struct {
 }
 
 type GMessageHandleCenter struct {
-	ChanMessages           chan *GMessagePackage
-	messageEvents          map[string]func(sender *GConnection, message interface{})
-	isRunning              bool
-	goroutinesCount        int32
-	runningGoroutinesCount int32
+	chanMessages         chan *GMessagePackage // 需要处理的信息Chan
+	isRunning            bool                  // 消息处理中心是否在运行
+	goroutinesCount      int32                 // 需要开启的Goroutines数量
+	numRunningGoroutines int32                 // 正在运行的Goroutines数量
 }
 
 // Init 初始化消息处理中心
 func (m *GMessageHandleCenter) Init() {
-	m.ChanMessages = make(chan *GMessagePackage, 1000)
-	m.messageEvents = make(map[string]func(sender *GConnection, message interface{}))
+	m.chanMessages = make(chan *GMessagePackage, 1000)
 	m.isRunning = false
 	m.goroutinesCount = 0
-	m.runningGoroutinesCount = 0
+	m.numRunningGoroutines = 0
 }
 
 // Start
@@ -50,7 +47,7 @@ func (m *GMessageHandleCenter) Start(count int32) {
 		go m.MessageDelivery()
 	}
 
-	for m.runningGoroutinesCount < m.goroutinesCount {
+	for m.numRunningGoroutines < m.goroutinesCount {
 		time.Sleep(100 * time.Millisecond)
 	}
 }
@@ -60,9 +57,9 @@ func (m *GMessageHandleCenter) Start(count int32) {
 //	@Description: 停止消息处理中心
 //	@receiver m
 func (m *GMessageHandleCenter) Stop() {
-	close(m.ChanMessages)
+	close(m.chanMessages)
 	m.isRunning = false
-	for m.runningGoroutinesCount > 0 {
+	for m.numRunningGoroutines > 0 {
 		time.Sleep(100 * time.Millisecond)
 	}
 }
@@ -70,67 +67,44 @@ func (m *GMessageHandleCenter) Stop() {
 // MessageDelivery 发送消息，将ChanMessage里的消息发送给对应的服务器进行处理
 func (m *GMessageHandleCenter) MessageDelivery() {
 	//使用原子变量对运行的Goroutines计数
-	atomic.AddInt32(&m.runningGoroutinesCount, 1)
-	defer atomic.AddInt32(&m.runningGoroutinesCount, -1)
-	for {
+	atomic.AddInt32(&m.numRunningGoroutines, 1)
+	mlog.Info.Printf("Message Delivery [No.%d]Goroutines Start...", m.numRunningGoroutines)
+	defer atomic.AddInt32(&m.numRunningGoroutines, -1)
+	for m.isRunning {
 		select {
-		case _, ok := <-m.ChanMessages:
+		case pkg, ok := <-m.chanMessages:
 			if !ok {
 				mlog.Warning.Printf("chan messages is Closed...")
 				return
 			}
-			for m.isRunning {
-
+			// 把消息发送给Handout处理
+			if pkg.message.Request != nil {
+				Instance().MessageHandOut.HandOutRequest(pkg.sender, pkg.message.Request)
+			}
+			if pkg.message.Response != nil {
+				Instance().MessageHandOut.HandOutResponse(pkg.sender, pkg.message.Response)
 			}
 		}
 	}
 }
 
 func (m *GMessageHandleCenter) AcceptMessage(sender *GConnection, message *ProtoMessage.NetMessage) {
-	m.ChanMessages <- &GMessagePackage{
+	ok := true
+	if sender == nil {
+		mlog.Warning.Printf("The message sender is null !!!")
+		ok = false
+	}
+	if message == nil {
+		mlog.Warning.Printf("The message is null !!!")
+		ok = false
+	}
+
+	if !ok {
+		return
+	}
+
+	m.chanMessages <- &GMessagePackage{
 		sender:  sender,
 		message: message,
 	}
-}
-
-// TriggerEvents
-//
-//	@Description: 根据所传入的消息触发对应的事件
-//	@receiver m
-//	@param sender 发送者
-//	@param mes 消息
-func (m *GMessageHandleCenter) TriggerEvents(sender *GConnection, mes interface{}) {
-	key := reflect.TypeOf(mes).Name()
-	event, ok := m.messageEvents[key]
-	if ok {
-		event(sender, mes)
-	} else {
-		mlog.Warning.Printf("message events the key[%s] is not find", key)
-	}
-}
-
-// Login
-//
-//	@Description: 注册信息对应的事件
-//	@receiver m
-//	@param msg 信息
-//	@param event 事件
-func (m *GMessageHandleCenter) Login(msg interface{}, event func(sender *GConnection, msg interface{})) {
-	key := reflect.TypeOf(msg).Name()
-	if m.messageEvents[key] != nil {
-		m.messageEvents[key] = nil
-	}
-	m.messageEvents[key] = event
-
-}
-
-// Logoff
-//
-//	@Description: 注销信息对应的事件
-//	@receiver m
-//	@param msg 信息
-//	@param event 事件
-func (m *GMessageHandleCenter) Logoff(msg interface{}) {
-	key := reflect.TypeOf(msg).Name()
-	m.messageEvents[key] = nil
 }
