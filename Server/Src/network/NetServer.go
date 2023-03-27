@@ -14,7 +14,6 @@ func (ns *GNetServer) Init(network string, address string) {
 	ns.isRunning = false
 	ns.ServerListener = NewListener(network, address)
 	mlog.Info.Printf("Start Listen success. Listen to [%s]", ns.ServerListener.addr.String())
-	Instance().MessageHandleCenter.Init()
 }
 
 // Start 开启网络服务
