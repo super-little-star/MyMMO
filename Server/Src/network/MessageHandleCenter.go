@@ -84,10 +84,17 @@ func (m *GMessageHandleCenter) MessageDelivery() {
 			if pkg.message.Response != nil {
 				Instance().MessageHandOut.HandOutResponse(pkg.sender, pkg.message.Response)
 			}
+			continue
 		}
 	}
 }
 
+// AcceptMessage
+//
+//	@Description: 接受消息，把消息放到消息处理中心的Chan里
+//	@receiver m
+//	@param sender 发送者
+//	@param message 消息
 func (m *GMessageHandleCenter) AcceptMessage(sender *GConnection, message *ProtoMessage.NetMessage) {
 	ok := true
 	if sender == nil {

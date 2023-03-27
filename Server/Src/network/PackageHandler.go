@@ -47,8 +47,10 @@ func (ph *PackageHandler) parsePackage() error {
 			return err
 		}
 		//把Protobuf字节流的的部分进行解包，转化成protobuf对象
-		_ = UnpackMessage(ph.stream, msgLen)
-		// TODO 获取到Protobuf对象，往后再次进行处理
+		buf := UnpackMessage(ph.stream, msgLen)
+
+		// 把转换到的Protobuf对象传给消息处理中心处理
+		Instance().MessageHandleCenter.AcceptMessage(ph.sender, buf)
 	}
 	//包体读取完毕，重置缓存
 	ph.stream.Reset()
