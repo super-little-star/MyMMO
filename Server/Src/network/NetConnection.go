@@ -54,7 +54,7 @@ func (c *GConnection) WriteMsg() {
 
 	for {
 		select {
-		case data := <-c.chanSendData:
+		case data := <-c.chanSendData: // 把需要发送的信息取出来发送出去
 			if _, err := c.conn.Write(data); err != nil {
 				mlog.Error.Printf("Client[%s] connection write data is error : %v\n", c.conn.RemoteAddr(), err)
 				continue

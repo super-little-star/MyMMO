@@ -36,7 +36,7 @@ func Run() {
 
 func help() {
 	s := "Help:\n" +
-		"exit --- Stop Game server\n" +
+		"exit --- Stop Game services\n" +
 		"help --- Show Help\n"
 	print(s)
 }
