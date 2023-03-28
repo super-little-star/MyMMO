@@ -15,7 +15,7 @@ public class UserServer : Singleton<UserServer>, IDisposable
     {
         Debug.Log("Connecting to server...");
         NetClient.Instance.Init("127.0.0.1", 7788);
-        NetClient.Instance.Connect();
+        NetClient.Instance.ConnectToServer();
     }
     public void Dispose()
     {

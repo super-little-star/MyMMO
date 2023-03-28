@@ -13,6 +13,8 @@ namespace Network
     {
         public NetClient() { }
 
+        PackageHandler packageHandler = new PackageHandler();
+
         #region const
         /// <summary>
         /// 能大接受的包体大小
@@ -48,6 +50,8 @@ namespace Network
         private MemoryStream sendBuffer = new MemoryStream();
         private MemoryStream receiveBuffer = new MemoryStream(DEF_RECV_BUFFER_SIZE);
         private Queue<NetMessage> sendQueue = new Queue<NetMessage>();
+        private int sendOffset = 0;
+        private float lastSendTime = 0;
         #endregion
 
         /// <summary>
@@ -87,34 +91,48 @@ namespace Network
 
             if (this.Connected) return true;
 
-            Connect();
+            ConnectToServer();
             return false;
         }
 
-        public void Connect()
+        public void Close(int errorCode)
         {
-            if (this.connecting) return;
+            Debug.LogWarning("Close Connection ,erroro code : "+errorCode.ToString()+"\n");
+            this.connecting = false;
+            if(this.clientSocket != null)
+            {
+                this.clientSocket.Close();
+            }
 
-            if (this.clientSocket != null) { this.clientSocket.Close(); }
+            this.sendQueue.Clear();
 
-            if (this.address == default(IPEndPoint)) { throw new Exception("Please Init address....."); }
+            this.receiveBuffer.Position = 0;
+            this.sendBuffer.Position = sendOffset = 0;
 
-            Debug.Log("DoConnect");
-            this.connecting = true;
-
-            this.DoConnect();
+            //TODO 错误处理
         }
 
-        private void DoConnect()
+        /// <summary>
+        /// 连接到服务器
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        public void ConnectToServer()
         {
-            Debug.Log("NetClient Do Connect On " + this.address.ToString());
+            if (this.connecting) return;// 检查是否正在连接
 
-            try 
+            if (this.clientSocket != null) { this.clientSocket.Close(); }// 如果已经存在Socket，先断开
+
+            if (this.address == default(IPEndPoint)) { throw new Exception("Please Init address....."); }// 服务器的地址没有初始化
+
+            this.connecting = true;
+
+            Debug.Log("NetClient Do Connect To " + this.address.ToString());
+
+            // 连接到服务器
+            try
             {
-                if (this.clientSocket != null) { this.clientSocket.Close(); }
-
                 this.clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                this.clientSocket.Blocking = true;
+                this.clientSocket.Blocking = false;
 
                 Debug.Log(string.Format("Connect to server {0}\n", this.address));
                 IAsyncResult result = this.clientSocket.BeginConnect(this.address, null, null);
@@ -126,7 +144,7 @@ namespace Network
             }
             catch (Exception e)
             {
-                Debug.Log("Do Connect Exception: " + e.ToString());
+                Debug.Log("Do Connect Exception: " + e.ToString() + "\n");
             }
 
 
@@ -135,6 +153,44 @@ namespace Network
                 this.clientSocket.Blocking = false;
             }
             this.connecting = false;
+        }
+
+        private bool IsSockeError()
+        {
+            bool isError = this.clientSocket.Poll(0, SelectMode.SelectError);
+            if (isError)
+            {
+                Debug.Log("Client Socket Poll Select Error\n");
+            }
+            return isError;
+        }
+
+        private bool ReadMessage()
+        {
+            try
+            {
+                if (IsSockeError()) return false;
+
+                bool res = this.clientSocket.Poll(0, SelectMode.SelectRead);
+                if (res)
+                {
+                    int n = this.clientSocket.Receive(this.receiveBuffer.GetBuffer(), 0, this.receiveBuffer.Capacity, SocketFlags.None);
+                    if (n <= 0)
+                    {
+                        this.Close(0);
+                        return false;
+                    }
+                    this.packageHandler.ReceiveMsg(this.receiveBuffer.GetBuffer());
+                }
+            }
+            catch(Exception e)
+            {
+                Debug.Log("Read Message Exception : " + e.ToString() + "\n");
+                this.Close(0);
+                return false;
+            }
+            return true;
+            
         }
     }
 }
