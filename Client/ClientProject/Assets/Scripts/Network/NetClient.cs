@@ -75,7 +75,10 @@ namespace Network
 
             if (this.KeepConnect())
             {
-
+                if (this.ReadMessage())
+                {
+                    MessageHandleCenter.Instance.MessageDelivery();
+                }
             }
         }
 

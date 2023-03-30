@@ -14,21 +14,6 @@ func (mh *GMessageHandOut) Init() {
 	mh.messageEvents = make(map[string]func(sender *GConnection, message interface{}))
 }
 
-// HandOutResponse
-//
-//	@Description: 把Response发送给对应的事件进行处理
-//	@receiver mh
-//	@param sender
-//	@param response
-func (mh *GMessageHandOut) HandOutResponse(sender *GConnection, response *ProtoMessage.NetMessageResponse) {
-	if response == nil {
-		return
-	}
-	if response.UserRegister != nil {
-		mh.TriggerEvents(sender, response)
-	}
-}
-
 // HandOutRequest
 //
 //	@Description: 把Request发给对应的事件处理
