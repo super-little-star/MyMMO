@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     public bool global = true;
@@ -29,6 +30,11 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
             instance = this.gameObject.GetComponent<T>();
         }
+        
+    }
+
+    private void Start()
+    {
         this.OnStart();
     }
 
@@ -36,4 +42,6 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
 
     }
+
+    
 }

@@ -2,25 +2,28 @@ package main
 
 import (
 	"mmo_server/network"
+	"mmo_server/services"
 	"time"
 )
 
 type GGameServer struct {
 	isRunning bool
-	NetServer *network.GNetServer
+	NetServer *network.GNetService
 }
 
 // Init 初始化GameServer
 func (gs *GGameServer) Init() {
 	gs.isRunning = false
-	gs.NetServer = &network.GNetServer{}
+	gs.NetServer = &network.GNetService{}
 	gs.NetServer.Init("tcp", "127.0.0.1:7788")
+
+	services.Instance().UserService.Init()
 }
 
 // Start 开启GameServer逻辑
 func (gs *GGameServer) Start() {
-	gs.NetServer.Start()
 	gs.isRunning = true
+	gs.NetServer.Start()
 	go gs.update() // 开启一个携程 刷新游戏业务逻辑
 }
 

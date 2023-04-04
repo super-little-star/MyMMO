@@ -37,37 +37,36 @@ func (mh *GMessageHandOut) HandOutRequest(sender *GConnection, request *ProtoMes
 //	@param sender 发送者
 //	@param mes 消息
 func (mh *GMessageHandOut) TriggerEvents(sender *GConnection, mes interface{}) {
-	key := reflect.TypeOf(mes).Name()
+	key := reflect.TypeOf(mes).String()
 	event, ok := mh.messageEvents[key]
 	if ok {
 		event(sender, mes)
+		mlog.Info.Printf("Trigger Event[%s] success...", key)
 	} else {
 		mlog.Warning.Printf("message events the key[%s] is not find", key)
 	}
 }
 
-// Login
+// LoginEvent
 //
 //	@Description: 注册消息对应的事件
-//	@receiver m
 //	@param msg 消息
 //	@param event 事件
-func (mh *GMessageHandOut) Login(msg interface{}, event func(sender *GConnection, msg interface{})) {
-	key := reflect.TypeOf(msg).Name()
-	if mh.messageEvents[key] != nil {
-		mh.messageEvents[key] = nil
+func LoginEvent[T any](event func(sender *GConnection, msg interface{})) {
+	var t T
+	key := reflect.TypeOf(t).String()
+	if Instance().MessageHandOut.messageEvents[key] != nil {
+		Instance().MessageHandOut.messageEvents[key] = nil
 	}
-	mh.messageEvents[key] = event
-
+	Instance().MessageHandOut.messageEvents[key] = event
+	mlog.Info.Printf("LoginEvent Message Event[%s]%v Success", key, event)
 }
 
-// Logoff
+// LogoffEvent
 //
 //	@Description: 注销消息对应的事件
-//	@receiver m
-//	@param msg 消息
-//	@param event 事件
-func (mh *GMessageHandOut) Logoff(msg interface{}) {
-	key := reflect.TypeOf(msg).Name()
-	mh.messageEvents[key] = nil
+func LogoffEvent[T any]() {
+	var t T
+	key := reflect.TypeOf(t).String()
+	Instance().MessageHandOut.messageEvents[key] = nil
 }

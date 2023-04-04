@@ -2,6 +2,7 @@ package main
 
 import (
 	"mmo_server/network"
+	"mmo_server/services"
 	"mmo_server/utils/command"
 	"mmo_server/utils/globalConfig"
 	"mmo_server/utils/mlog"
@@ -12,6 +13,7 @@ func init() {
 	mlog.Init()
 	// 各个包单例模式初始化
 	network.InitSingleton()
+	services.InitSingleton()
 }
 
 func main() {

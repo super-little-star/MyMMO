@@ -21,13 +21,15 @@ namespace Network
         public void HandOut(NetMessage message)
         {
             if (message == null) return;
-            Type type = message.Response.GetType();
 
-            foreach(FieldInfo f in type.GetFields())
+            
+            Type type = message.Response.GetType();
+            // 通过反射遍历获取Response下的所有字段
+            foreach (FieldInfo f in type.GetFields())
             {
                 var value = f.GetValue(message.Response);
                 if(value == null) continue;
-
+                // 触发对应的事件
                 TriggerEvent(value);
             }
         }

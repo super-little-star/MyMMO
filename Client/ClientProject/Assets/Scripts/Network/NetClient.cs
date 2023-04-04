@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 using System;
+using System.Threading;
 
 namespace Network
 {
@@ -42,6 +43,9 @@ namespace Network
                 return (this.clientSocket != default(Socket)) ? this.clientSocket.Connected : false;
             }
         }
+        private int retryTimes = 0;
+        private int retryTimesCount = 3;
+        private Thread ConnectThread = null;
         #endregion
 
         #region Socket 实体
@@ -52,6 +56,12 @@ namespace Network
         private Queue<NetMessage> sendQueue = new Queue<NetMessage>();
         private int sendOffset = 0;
         private float lastSendTime = 0;
+        #endregion
+
+        #region Event 事件
+        public delegate void ConnectEvent(bool result, string reason);
+        public event ConnectEvent OnConnecting;
+        public event ConnectEvent OnDisconnect;
         #endregion
 
         /// <summary>
@@ -68,16 +78,17 @@ namespace Network
         {
             this.running= true;
         }
-
-        private void Update()
+        
+        public void Update()
         {
-            if (!running) return;
-
             if (this.KeepConnect())
             {
                 if (this.ReadMessage())
                 {
-                    MessageHandleCenter.Instance.MessageDelivery();
+                    if (this.WriteMessage())
+                    {
+                        MessageHandleCenter.Instance.MessageDelivery();// 把消息队列里的信息进行分发
+                    }
                 }
             }
         }
@@ -98,6 +109,10 @@ namespace Network
             return false;
         }
 
+        /// <summary>
+        /// 关闭连接
+        /// </summary>
+        /// <param name="errorCode">错误代码</param>
         public void Close(int errorCode)
         {
             Debug.LogWarning("Close Connection ,erroro code : "+errorCode.ToString()+"\n");
@@ -109,17 +124,18 @@ namespace Network
 
             this.sendQueue.Clear();
 
-            this.receiveBuffer.Position = 0;
-            this.sendBuffer.Position = sendOffset = 0;
+            this.Reset();
 
             //TODO 错误处理
         }
+
+
 
         /// <summary>
         /// 连接到服务器
         /// </summary>
         /// <exception cref="Exception"></exception>
-        public void ConnectToServer()
+        private void ConnectToServer()
         {
             if (this.connecting) return;// 检查是否正在连接
 
@@ -129,13 +145,26 @@ namespace Network
 
             this.connecting = true;
 
+            if(OnConnecting!= null)
+            {
+                OnConnecting(false, "正在连接。。。");
+            }
+
+            if (retryTimes < retryTimesCount)
+            {
+                // 开启一个线程连接
+                DoConnect();
+            }
+        }
+        private void DoConnect()
+        {
             Debug.Log("NetClient Do Connect To " + this.address.ToString());
 
             // 连接到服务器
             try
             {
                 this.clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                this.clientSocket.Blocking = false;
+                this.clientSocket.Blocking = true;
 
                 Debug.Log(string.Format("Connect to server {0}\n", this.address));
                 IAsyncResult result = this.clientSocket.BeginConnect(this.address, null, null);
@@ -145,9 +174,17 @@ namespace Network
                     this.clientSocket.EndConnect(result);
                 }
             }
+            catch (SocketException se)
+            {
+                if (se.SocketErrorCode == SocketError.ConnectionRefused)
+                {
+                    this.Close(0);
+                }
+                Debug.LogErrorFormat("Socket Exception : {0},{1},{2}]{3}", se.ErrorCode, se.SocketErrorCode, se.NativeErrorCode, se.Message);
+            }
             catch (Exception e)
             {
-                Debug.Log("Do Connect Exception: " + e.ToString() + "\n");
+                Debug.LogError("Do Connect Exception: " + e.ToString() + "\n");
             }
 
 
@@ -155,10 +192,42 @@ namespace Network
             {
                 this.clientSocket.Blocking = false;
             }
+            else
+            {
+                this.retryTimes++;
+                Debug.LogWarningFormat("Retry[{0}] To Connect to service", retryTimes);
+                if (this.retryTimes >= this.retryTimesCount)
+                {
+
+                }
+            }
             this.connecting = false;
+            if (OnConnecting != null) OnConnecting(true, "连接结束。。。");
+
         }
 
-        private bool IsSockeError()
+        /// <summary>
+        /// 发送Protobuf
+        /// </summary>
+        /// <param name="msg">Protobuf</param>
+        public void Send(NetMessage msg)
+        {
+            if (!running) return;
+
+            if(!this.Connected)
+            {
+                //从新连接
+                this.ResetBuf();
+                this.ConnectToServer();
+                return;
+            }
+            this.sendQueue.Enqueue(msg);
+
+            this.lastSendTime = Time.time;
+        }
+
+        #region Socket
+        private bool IsSocketError()
         {
             bool isError = this.clientSocket.Poll(0, SelectMode.SelectError);
             if (isError)
@@ -168,11 +237,15 @@ namespace Network
             return isError;
         }
 
+        /// <summary>
+        /// 把Socket上的信息提取出来
+        /// </summary>
+        /// <returns></returns>
         private bool ReadMessage()
         {
             try
             {
-                if (IsSockeError()) return false;
+                if (IsSocketError()) return false;
 
                 bool res = this.clientSocket.Poll(0, SelectMode.SelectRead);
                 if (res)
@@ -195,5 +268,71 @@ namespace Network
             return true;
             
         }
+
+        /// <summary>
+        /// 把信息写到Socket上
+        /// </summary>
+        /// <returns></returns>
+        private bool WriteMessage()
+        {
+
+            try
+            {
+                if (IsSocketError()) return false;// 判断socket是否有错误
+
+                bool res = this.clientSocket.Poll(0, SelectMode.SelectWrite);
+                if (res)
+                {
+                    if(this.sendBuffer.Position > this.sendOffset)// 判断是否有信息未发送
+                    {
+                        int bufsize = (int)(this.sendBuffer.Position - this.sendOffset);
+                        int n = this.clientSocket.Send(this.sendBuffer.GetBuffer(), this.sendOffset, SocketFlags.None);
+                        if (n <= 0)
+                        {
+                            this.Close(0);
+                            return false;
+                        }
+                        this.sendOffset += n;
+                        if(this.sendOffset >=this.sendBuffer.Position)
+                        {
+                            this.sendOffset = 0;
+                            this.sendBuffer.Position = 0;
+                            this.sendQueue.Dequeue();
+                        }
+                    }
+                    else
+                    {
+                        if(this.sendQueue.Count > 0)
+                        {
+                            NetMessage msg = this.sendQueue.Peek();
+                            byte[] buf = PackageHandler.PackMessage(msg);
+                            this.sendBuffer.Write(buf, 0, buf.Length);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Write Message Exception : " + e.ToString() + "\n");
+                this.Close(0);
+                return false;
+            }
+            return true;
+        }
+        #endregion
+
+        #region Reset
+        private void ResetBuf()
+        {
+            this.receiveBuffer.Position = 0;
+            this.sendBuffer.Position = sendOffset = 0;
+        }
+        private void Reset()
+        {
+            this.ResetBuf();
+            this.connecting = false;
+            this.lastSendTime = 0;
+        }
+        #endregion
     }
 }

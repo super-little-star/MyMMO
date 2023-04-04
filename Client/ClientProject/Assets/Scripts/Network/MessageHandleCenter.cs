@@ -39,7 +39,7 @@ namespace Network
 
         public void Dispose()
         {
-            
+            messageQueue.Clear();
         }
     }
 }

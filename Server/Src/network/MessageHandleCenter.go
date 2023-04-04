@@ -81,9 +81,6 @@ func (m *GMessageHandleCenter) MessageDelivery() {
 			if pkg.message.Request != nil {
 				Instance().MessageHandOut.HandOutRequest(pkg.sender, pkg.message.Request)
 			}
-			if pkg.message.Response != nil {
-				Instance().MessageHandOut.HandOutResponse(pkg.sender, pkg.message.Response)
-			}
 			continue
 		}
 	}

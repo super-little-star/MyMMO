@@ -27,11 +27,11 @@ func NewConnection(conn *net.TCPConn, session *GSession) *GConnection {
 }
 
 // ReadMsg 读取连接上的信息
-func (c *GConnection) ReadMsg() {
+func (c *GConnection) readMsg() {
 	mlog.Info.Printf("Client[%s] Read Goroutine is Running ....\n", c.conn.RemoteAddr())
 	defer func() {
 		mlog.Info.Printf("Client[%s] is Disconnected!!!!\n", c.conn.RemoteAddr())
-		c.Close()
+		c.close()
 	}()
 	c.packageHandler = NewPackageHandler(c)
 	for {
@@ -48,7 +48,7 @@ func (c *GConnection) ReadMsg() {
 }
 
 // WriteMsg 将chanSendData里的数据发送给客户端
-func (c *GConnection) WriteMsg() {
+func (c *GConnection) writeMsg() {
 	mlog.Info.Printf("Client[%s] Write Goroutine is Running ....\n", c.conn.RemoteAddr())
 	defer mlog.Info.Printf("Client[%s] Write Goroutine is Close !!!!\n", c.conn.RemoteAddr())
 
@@ -63,6 +63,21 @@ func (c *GConnection) WriteMsg() {
 			return
 		}
 	}
+}
+
+// Close 关闭连接
+func (c *GConnection) close() {
+	if c.isClose {
+		return
+	}
+	if err := c.conn.Close(); err != nil {
+		mlog.Error.Println("conn close err : ", err)
+	}
+	c.isClose = true
+	c.chanIsClose <- true
+
+	close(c.chanIsClose)
+	close(c.chanSendData)
 }
 
 // SendMsg 把Protobuf转化成字节流byte塞到chanSendData里等待发送
@@ -80,17 +95,10 @@ func (c *GConnection) SendMsg(msg *ProtoMessage.NetMessage) {
 	}
 }
 
-// Close 关闭连接
-func (c *GConnection) Close() {
-	if c.isClose {
-		return
+// Session 返回连接上的会话
+func (c *GConnection) Session() *GSession {
+	if c.session != nil {
+		return c.session
 	}
-	if err := c.conn.Close(); err != nil {
-		mlog.Error.Println("conn close err : ", err)
-	}
-	c.isClose = true
-	c.chanIsClose <- true
-
-	close(c.chanIsClose)
-	close(c.chanSendData)
+	return nil
 }
