@@ -286,7 +286,7 @@ namespace Network
                     if(this.sendBuffer.Position > this.sendOffset)// 判断是否有信息未发送
                     {
                         int bufsize = (int)(this.sendBuffer.Position - this.sendOffset);
-                        int n = this.clientSocket.Send(this.sendBuffer.GetBuffer(), this.sendOffset, SocketFlags.None);
+                        int n = this.clientSocket.Send(this.sendBuffer.GetBuffer(), this.sendOffset,bufsize, SocketFlags.None);
                         if (n <= 0)
                         {
                             this.Close(0);

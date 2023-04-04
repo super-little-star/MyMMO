@@ -9,7 +9,7 @@ import (
 	"mmo_server/utils/mlog"
 )
 
-const MaxPackageSize uint32 = 64 * 1024
+const MaxPackageSize int = 64 * 1024
 
 type PackageHandler struct {
 	stream *bytes.Buffer
@@ -26,7 +26,7 @@ func NewPackageHandler(sender *GConnection) *PackageHandler {
 // ReceiveMsg 接受信息
 func (ph *PackageHandler) ReceiveMsg(data []byte) error {
 	//检查数据长度是否超出规定长度
-	if ph.stream.Cap()+len(data) > int(MaxPackageSize) {
+	if ph.stream.Cap()+len(data) > MaxPackageSize {
 		return errors.New("PackageHandler : buffer overflow")
 	}
 	//写到缓存里

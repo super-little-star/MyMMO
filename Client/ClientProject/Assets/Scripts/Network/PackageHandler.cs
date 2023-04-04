@@ -57,7 +57,7 @@ namespace Network
             {
                 ProtoBuf.Serializer.Serialize(msg, message);
                 data = new byte[msg.Length + 4];
-                Buffer.BlockCopy(BitConverter.GetBytes(msg.Length), 0, data, 0, 4);
+                    Buffer.BlockCopy(BitConverter.GetBytes(msg.Length), 0, data, 0, 4);
                 Buffer.BlockCopy(msg.GetBuffer(), 0, data, 4, (int)msg.Length);
             }
             return data;

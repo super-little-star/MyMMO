@@ -9,17 +9,17 @@ type GUserService struct {
 }
 
 func (g *GUserService) Init() {
-	network.LoginEvent[*ProtoMessage.UserRegisterRequest](g.OnUserRegister)
+	network.LoginEvent[*ProtoMessage.NUserRegisterRequest](g.OnUserRegister)
 }
 func (g *GUserService) Stop() {
-	network.LogoffEvent[*ProtoMessage.UserRegisterRequest]()
+	network.LogoffEvent[*ProtoMessage.NUserRegisterRequest]()
 }
 
 func (g *GUserService) OnUserRegister(sender *network.GConnection, msg interface{}) {
 	response := &ProtoMessage.NetMessage{}
 	response.Response = &ProtoMessage.NetMessageResponse{}
-	response.Response.UserRegister = &ProtoMessage.UserRegisterResponse{
-		Result:   ProtoMessage.RESULT_SUCCESS,
+	response.Response.UserRegister = &ProtoMessage.NUserRegisterResponse{
+		Result:   ProtoMessage.NRESULT_SUCCESS,
 		Errormsg: "",
 	}
 

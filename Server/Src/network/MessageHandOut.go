@@ -25,7 +25,7 @@ func (mh *GMessageHandOut) HandOutRequest(sender *GConnection, request *ProtoMes
 		return
 	}
 	if request.UserRegister != nil {
-		mh.TriggerEvents(sender, request)
+		mh.TriggerEvents(sender, request.UserRegister)
 	}
 
 }
