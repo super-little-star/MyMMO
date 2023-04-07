@@ -73,7 +73,7 @@ namespace ProtoMessage
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
         [global::ProtoBuf.ProtoMember(1, Name = @"result")]
-        public Nresult Result { get; set; }
+        public Result Result { get; set; }
 
         [global::ProtoBuf.ProtoMember(2, Name = @"errormsg")]
         [global::System.ComponentModel.DefaultValue("")]
@@ -81,8 +81,8 @@ namespace ProtoMessage
 
     }
 
-    [global::ProtoBuf.ProtoContract(Name = @"NRESULT")]
-    public enum Nresult
+    [global::ProtoBuf.ProtoContract(Name = @"RESULT")]
+    public enum Result
     {
         [global::ProtoBuf.ProtoEnum(Name = @"SUCCESS")]
         Success = 0,

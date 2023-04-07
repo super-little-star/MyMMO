@@ -26,7 +26,7 @@ namespace Network
 
                 if(msg.Response!= null)
                 {
-                    MessageHandOut.Instance.TriggerEvent(msg.Response);
+                    MessageHandOut.Instance.HandOut(msg);
                 }
             }
         }

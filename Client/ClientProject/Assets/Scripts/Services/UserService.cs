@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 public class UserSerice : Singleton<UserSerice>, IDisposable
 {
-    public UnityAction<Nresult, string> OnRegisterCallback;
+    public UnityAction<Result, string> OnRegisterCallback;
 
     public void Init()
     {
@@ -34,8 +34,9 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
         NetClient.Instance.Send(msg);
     }
 
-    private void OnUserRegister(NUserRegisterResponse response)
+    private void OnUserRegister(object message)
     {
+        NUserRegisterResponse response = (NUserRegisterResponse)message; 
         Debug.LogFormat("OnUserRegister:: Result[{0}],Message[{1}]", response.Result, response.Errormsg);
 
         if(OnRegisterCallback != null) { OnRegisterCallback.Invoke(response.Result,response.Errormsg); }

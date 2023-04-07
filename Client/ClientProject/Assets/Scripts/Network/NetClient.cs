@@ -7,6 +7,8 @@ using System.Net.Sockets;
 using UnityEngine;
 using System;
 using System.Threading;
+using Unity.VisualScripting;
+using UnityEngine.Events;
 
 namespace Network
 {
@@ -59,9 +61,7 @@ namespace Network
         #endregion
 
         #region Event 事件
-        public delegate void ConnectEvent(bool result, string reason);
-        public event ConnectEvent OnConnecting;
-        public event ConnectEvent OnDisconnect;
+        public UnityAction<bool> OnConnecting;
         #endregion
 
         /// <summary>
@@ -77,6 +77,7 @@ namespace Network
         protected override void OnStart()
         {
             this.running= true;
+            
         }
         
         public void Update()
@@ -117,6 +118,7 @@ namespace Network
         {
             Debug.LogWarning("Close Connection ,erroro code : "+errorCode.ToString()+"\n");
             this.connecting = false;
+
             if(this.clientSocket != null)
             {
                 this.clientSocket.Close();
@@ -124,7 +126,7 @@ namespace Network
 
             this.sendQueue.Clear();
 
-            this.Reset();
+            this.ResetAll();
 
             //TODO 错误处理
         }
@@ -145,15 +147,15 @@ namespace Network
 
             this.connecting = true;
 
-            if(OnConnecting!= null)
-            {
-                OnConnecting(false, "正在连接。。。");
-            }
+
+            this.OnConnecting?.Invoke(true);
+
 
             if (retryTimes < retryTimesCount)
             {
                 // 开启一个线程连接
-                DoConnect();
+                this.ConnectThread = new Thread(DoConnect);
+                this.ConnectThread.Start();
             }
         }
         private void DoConnect()
@@ -202,7 +204,10 @@ namespace Network
                 }
             }
             this.connecting = false;
-            if (OnConnecting != null) OnConnecting(true, "连接结束。。。");
+
+            this.OnConnecting?.Invoke(false);// 触发正在连接结束事件
+
+            this.ConnectThread?.Abort();// 终止线程，Abort会往上抛出异常
 
         }
 
@@ -321,18 +326,24 @@ namespace Network
         }
         #endregion
 
-        #region Reset
+        #region Reset 
         private void ResetBuf()
         {
             this.receiveBuffer.Position = 0;
             this.sendBuffer.Position = sendOffset = 0;
         }
-        private void Reset()
+        private void ResetAll()
         {
             this.ResetBuf();
             this.connecting = false;
             this.lastSendTime = 0;
         }
+
+        private void OnDisable()
+        {
+            this.Close(0);
+        }
+
         #endregion
     }
 }

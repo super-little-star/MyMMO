@@ -14,7 +14,7 @@ namespace Network
     {
         public MessageHandOut() { }
 
-        public delegate void MessageEvent<T>(T message);
+        public delegate void MessageEvent(object message);
         private Dictionary<string,Delegate>messageEvents = new Dictionary<string,Delegate>();
 
 
@@ -23,12 +23,18 @@ namespace Network
             if (message == null) return;
 
             
-            Type type = message.Response.GetType();
+            Type t = message.Response.GetType();
+
+
+            PropertyInfo[] ps = t.GetProperties();
             // 通过反射遍历获取Response下的所有字段
-            foreach (FieldInfo f in type.GetFields())
+            foreach (PropertyInfo p in ps)
             {
-                var value = f.GetValue(message.Response);
+                
+                var value = p.GetValue(message.Response);
+               
                 if(value == null) continue;
+                p.GetType();
                 // 触发对应的事件
                 TriggerEvent(value);
             }
@@ -39,12 +45,12 @@ namespace Network
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="message"></param>
-        public void TriggerEvent<T>(T message)
+        public void TriggerEvent(object message)
         {
             string key = message.GetType().Name;
             if(messageEvents.ContainsKey(key))
             {
-                MessageEvent<T> e = (MessageEvent<T>)messageEvents[key];
+                MessageEvent e = (MessageEvent)messageEvents[key];
                 if(e != null)
                 {
                     try
@@ -69,14 +75,14 @@ namespace Network
         /// </summary>
         /// <typeparam name="T">信息类型</typeparam>
         /// <param name="e">对应的事件</param>
-        public void Login<T>(MessageEvent<T> messageEvent)
+        public void Login<T>(MessageEvent messageEvent)
         {
             string type = typeof(T).Name;
             if(!messageEvents.ContainsKey(type))
             {
                 messageEvents[type] = null;
             }
-            messageEvents[type] = (MessageEvent<T>)messageEvents[type] + messageEvent; ;
+            messageEvents[type] = (MessageEvent)messageEvents[type] + messageEvent; ;
         }
 
         /// <summary>
@@ -84,13 +90,13 @@ namespace Network
         /// </summary>
         /// <typeparam name="T">信息类型</typeparam>
         /// <param name="messageEvent">信息对应的事件</param>
-        public void Logout<T>(MessageEvent<T> messageEvent ) {
+        public void Logout<T>(MessageEvent messageEvent ) {
             string type = typeof(T).Name;
             if (!messageEvents.ContainsKey(type))
             {
                 messageEvents[type] = null;
             }
-            messageEvents[type] = (MessageEvent<T>)messageEvents[type] - messageEvent; ;
+            messageEvents[type] = (MessageEvent)messageEvents[type] - messageEvent; ;
 
         }
     }
