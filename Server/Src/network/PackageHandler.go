@@ -9,7 +9,7 @@ import (
 	"mmo_server/utils/mlog"
 )
 
-const MaxPackageSize uint32 = 64 * 1024
+const MaxPackageSize int = 64 * 1024
 
 type PackageHandler struct {
 	stream *bytes.Buffer
@@ -24,32 +24,29 @@ func NewPackageHandler(sender *GConnection) *PackageHandler {
 }
 
 // ReceiveMsg 接受信息
-func (ph *PackageHandler) ReceiveMsg(data []byte) error {
+func (ph *PackageHandler) ReceiveMsg(data []byte, msgLen uint32) error {
 	//检查数据长度是否超出规定长度
-	if ph.stream.Cap()+len(data) > int(MaxPackageSize) {
+	if ph.stream.Cap()+len(data)+4 > MaxPackageSize {
 		return errors.New("PackageHandler : buffer overflow")
 	}
 	//写到缓存里
 	ph.stream.Write(data)
 	//将缓存中的数据进行解析
-	if err := ph.parsePackage(); err != nil {
+	if err := ph.parsePackage(msgLen); err != nil {
 		return err
 	}
 	return nil
 }
 
 // 解析Client发送过来的包
-func (ph *PackageHandler) parsePackage() error {
-	for ph.stream.Len() > 0 { //stream长度不为0，证明还有未读信息
-		var msgLen uint32 = 0
-		//先读取信息Protobuf字节流的部分的长度
-		if err := binary.Read(ph.stream, binary.LittleEndian, &msgLen); err != nil {
-			return err
-		}
-		//把Protobuf字节流的的部分进行解包，转化成protobuf对象
-		_ = UnpackMessage(ph.stream, msgLen)
-		// TODO 获取到Protobuf对象，往后再次进行处理
-	}
+func (ph *PackageHandler) parsePackage(msgLen uint32) error {
+
+	//把Protobuf字节流的的部分进行解包，转化成protobuf对象
+	buf := UnpackMessage(ph.stream, msgLen)
+
+	// 把转换到的Protobuf对象传给消息处理中心处理
+	Instance().MessageHandleCenter.AcceptMessage(ph.sender, buf)
+
 	//包体读取完毕，重置缓存
 	ph.stream.Reset()
 	return nil
