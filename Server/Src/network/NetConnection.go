@@ -1,6 +1,7 @@
 package network
 
 import (
+	"encoding/binary"
 	"io"
 	ProtoMessage "mmo_server/protocol"
 	"mmo_server/utils/mlog"
@@ -30,21 +31,27 @@ func NewConnection(conn *net.TCPConn, session *GSession) *GConnection {
 		chanSendData: make(chan []byte),
 		isClose:      false,
 	}
+	if err := c.conn.SetReadBuffer(MaxPackageSize); err != nil {
+		mlog.Error.Printf("Connection Set Read Buffer Error : %s !!!", err)
+	}
+	if err := c.conn.SetWriteBuffer(MaxPackageSize); err != nil {
+		mlog.Error.Printf("Connection Set Write Buffer Error : %s !!!", err)
+	}
 	c.packageHandler = NewPackageHandler(c)
 	return c
 }
 
 // ReadMsg 读取连接上的信息
 func (c *GConnection) readMsg() {
-	mlog.Info.Printf("Client[%s] Read Goroutine is Running ....\n", c.conn.RemoteAddr())
+	mlog.Info.Printf("Client[%s] Read Goroutine is Running ....", c.conn.RemoteAddr())
 	defer func() {
-		mlog.Info.Printf("Client[%s] is Disconnected!!!!\n", c.conn.RemoteAddr())
+		mlog.Info.Printf("Client[%s] Read Goroutine is Close !!!!", c.conn.RemoteAddr())
 		c.close()
 	}()
 	for {
-
-		n, err := c.conn.Read(c.readBuf)
-		if err != nil {
+		// 读取头部信息，获取信息长度
+		head := make([]byte, 4)
+		if _, err := c.conn.Read(head); err != nil {
 			if err == io.EOF {
 				mlog.Warning.Printf("Client[$s] connection is Close!!!", c.conn.RemoteAddr())
 				return
@@ -53,11 +60,26 @@ func (c *GConnection) readMsg() {
 			continue
 		}
 
-		if err := c.packageHandler.ReceiveMsg(c.readBuf[:n]); err != nil {
+		msgLen := binary.LittleEndian.Uint32(head) // 字节流转换Uint32
+
+		// 读取主要信息
+		body := make([]byte, msgLen)
+		if _, err := c.conn.Read(body); err != nil {
+			if err == io.EOF {
+				mlog.Warning.Printf("Client[$s] connection is Close!!!", c.conn.RemoteAddr())
+				return
+			}
+			mlog.Warning.Printf("Connection[%s] Read message error : %v\n", c.conn.RemoteAddr(), err)
+			continue
+		}
+
+		// 发给PackageHandler处理信息
+		if err := c.packageHandler.ReceiveMsg(body, msgLen); err != nil {
 			mlog.Warning.Println("package Handler Receive message error : ", err)
 			continue
 		}
 
+		c.readBuf = c.readBuf[:0] // Reset Read Buf
 	}
 }
 
@@ -73,6 +95,7 @@ func (c *GConnection) writeMsg() {
 				mlog.Error.Printf("Client[%s] connection write data is error : %v\n", c.conn.RemoteAddr(), err)
 				break
 			}
+			mlog.Info.Printf("Client[%s] connection write data is success...", c.conn.RemoteAddr())
 		case <-c.chanIsClose:
 			return
 		}
@@ -87,6 +110,9 @@ func (c *GConnection) close() {
 	if err := c.conn.Close(); err != nil {
 		mlog.Error.Println("conn close err : ", err)
 	}
+
+	c.session.Disconnected()
+
 	c.isClose = true
 	c.chanIsClose <- true
 

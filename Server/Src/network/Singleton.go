@@ -6,8 +6,9 @@ import (
 )
 
 type singleton struct {
-	MessageHandleCenter *GMessageHandleCenter
-	MessageHandOut      *GMessageHandOut
+	MessageHandleCenter IMessageHandleCenter
+	MessageHandOut      IMessageHandOut
+	ConnectionManager   IConnectionManager
 }
 
 var once sync.Once
@@ -18,9 +19,11 @@ func InitSingleton() {
 		instance = &singleton{
 			MessageHandleCenter: &GMessageHandleCenter{},
 			MessageHandOut:      &GMessageHandOut{},
+			ConnectionManager:   &GConnectionManager{},
 		}
 		instance.MessageHandleCenter.Init()
 		instance.MessageHandOut.Init()
+		instance.ConnectionManager.Init()
 		mlog.Info.Println("network package Singleton Init success...")
 	})
 }

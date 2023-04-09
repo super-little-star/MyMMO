@@ -12,6 +12,13 @@ type GMessagePackage struct {
 	message *ProtoMessage.NetMessage
 }
 
+type IMessageHandleCenter interface {
+	Init()
+	Start(count int32)
+	Stop()
+	AcceptMessage(sender *GConnection, message *ProtoMessage.NetMessage)
+}
+
 type GMessageHandleCenter struct {
 	chanMessages         chan *GMessagePackage // 需要处理的信息Chan
 	isRunning            bool                  // 消息处理中心是否在运行
@@ -44,7 +51,7 @@ func (m *GMessageHandleCenter) Start(count int32) {
 	}
 
 	for i := int32(1); i <= m.goroutinesCount; i++ {
-		go m.MessageDelivery()
+		go m.messageDelivery()
 	}
 
 	for m.numRunningGoroutines < m.goroutinesCount {
@@ -64,8 +71,8 @@ func (m *GMessageHandleCenter) Stop() {
 	}
 }
 
-// MessageDelivery 发送消息，将ChanMessage里的消息发送给对应的服务器进行处理
-func (m *GMessageHandleCenter) MessageDelivery() {
+// messageDelivery 发送消息，将ChanMessage里的消息发送给对应的服务器进行处理
+func (m *GMessageHandleCenter) messageDelivery() {
 	//使用原子变量对运行的Goroutines计数
 	atomic.AddInt32(&m.numRunningGoroutines, 1)
 	mlog.Info.Printf("Message Delivery [No.%d]Goroutines Start...", m.numRunningGoroutines)

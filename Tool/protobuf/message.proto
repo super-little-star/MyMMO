@@ -9,7 +9,7 @@ package ProtoMessage;
 //
 ////////////////////////////////////////////////////////////////
 
-enum NRESULT {
+enum RESULT {
     SUCCESS = 0;
     FAILED = 1;
 }
@@ -37,6 +37,6 @@ message NUserRegisterRequest {
     string passward = 2;
 }
 message NUserRegisterResponse {
-    NRESULT result = 1;
+    RESULT result = 1;
     string errormsg = 2;
 }

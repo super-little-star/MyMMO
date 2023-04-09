@@ -6,6 +6,13 @@ import (
 	"reflect"
 )
 
+type IMessageHandOut interface {
+	Init()
+	AddEvent(key string, event func(sender *GConnection, msg interface{}))
+	RemoveEvent(key string)
+	HandOutRequest(sender *GConnection, request *ProtoMessage.NetMessageRequest)
+}
+
 type GMessageHandOut struct {
 	messageEvents map[string]func(sender *GConnection, message interface{}) // 消息对应的世界处理
 }
@@ -25,18 +32,33 @@ func (mh *GMessageHandOut) HandOutRequest(sender *GConnection, request *ProtoMes
 		return
 	}
 	if request.UserRegister != nil {
-		mh.TriggerEvents(sender, request.UserRegister)
+		mh.triggerEvents(sender, request.UserRegister)
 	}
 
 }
 
-// TriggerEvents
+func (mh *GMessageHandOut) AddEvent(key string, event func(sender *GConnection, msg interface{})) {
+	_, ok := mh.messageEvents[key]
+	if ok {
+		mh.messageEvents[key] = nil
+	}
+	mh.messageEvents[key] = event
+}
+
+func (mh *GMessageHandOut) RemoveEvent(key string) {
+	_, ok := mh.messageEvents[key]
+	if ok {
+		mh.messageEvents[key] = nil
+	}
+}
+
+// triggerEvents
 //
 //	@Description: 根据所传入的消息触发对应的事件
 //	@receiver m
 //	@param sender 发送者
 //	@param mes 消息
-func (mh *GMessageHandOut) TriggerEvents(sender *GConnection, mes interface{}) {
+func (mh *GMessageHandOut) triggerEvents(sender *GConnection, mes interface{}) {
 	key := reflect.TypeOf(mes).String()
 	event, ok := mh.messageEvents[key]
 	if ok {
@@ -55,10 +77,7 @@ func (mh *GMessageHandOut) TriggerEvents(sender *GConnection, mes interface{}) {
 func LoginEvent[T any](event func(sender *GConnection, msg interface{})) {
 	var t T
 	key := reflect.TypeOf(t).String()
-	if Instance().MessageHandOut.messageEvents[key] != nil {
-		Instance().MessageHandOut.messageEvents[key] = nil
-	}
-	Instance().MessageHandOut.messageEvents[key] = event
+	Instance().MessageHandOut.AddEvent(key, event)
 	mlog.Info.Printf("LoginEvent Message Event[%s]%v Success", key, event)
 }
 
@@ -68,5 +87,5 @@ func LoginEvent[T any](event func(sender *GConnection, msg interface{})) {
 func LogoffEvent[T any]() {
 	var t T
 	key := reflect.TypeOf(t).String()
-	Instance().MessageHandOut.messageEvents[key] = nil
+	Instance().MessageHandOut.RemoveEvent(key)
 }

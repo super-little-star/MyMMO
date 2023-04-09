@@ -1,16 +1,20 @@
-package manager
+package network
 
 import (
-	"mmo_server/network"
 	"mmo_server/utils/mlog"
 )
 
+type IConnectionManager interface {
+	Init()
+	GetConn(characterId int) *GConnection
+}
+
 type GConnectionManager struct {
-	connections map[int]*network.GConnection
+	connections map[int]*GConnection
 }
 
 func (cm *GConnectionManager) Init() {
-	cm.connections = make(map[int]*network.GConnection)
+	cm.connections = make(map[int]*GConnection)
 }
 
 // GetConn
@@ -19,7 +23,7 @@ func (cm *GConnectionManager) Init() {
 //	@receiver cm
 //	@param characterId 角色ID
 //	@return *network.GConnection 返回对应的链接
-func (cm *GConnectionManager) GetConn(characterId int) *network.GConnection {
+func (cm *GConnectionManager) GetConn(characterId int) *GConnection {
 	c, ok := cm.connections[characterId]
 	if ok {
 		return c

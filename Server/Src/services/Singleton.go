@@ -17,12 +17,13 @@ func InitSingleton() {
 		instance = &singleton{
 			UserService: &GUserService{},
 		}
-		mlog.Info.Println("network package Singleton Init success...")
+		mlog.Info.Println("Service package Singleton Init success...")
 	})
 }
 func Instance() *singleton {
 	if instance != nil {
 		return instance
 	}
+	mlog.Error.Println("Instance is Null!!!")
 	return nil
 }
