@@ -1,8 +1,11 @@
 package main
 
 import (
+	"mmo_server/DB"
 	"mmo_server/network"
 	"mmo_server/services"
+	"mmo_server/utils/globalConfig"
+	"mmo_server/utils/mlog"
 	"time"
 )
 
@@ -16,6 +19,11 @@ func (gs *GGameServer) Init() {
 	gs.isRunning = false
 	gs.NetServer = &network.GNetService{}
 	gs.NetServer.Init("tcp", "127.0.0.1:7788")
+
+	//初始化数据库
+	if err := DB.Init(globalConfig.MySQLCfg.User, globalConfig.MySQLCfg.Password, globalConfig.MySQLCfg.IP, globalConfig.MySQLCfg.Port, globalConfig.MySQLCfg.DataBase); err != nil {
+		mlog.Error.Fatalf("DB Init fail,error : %v !!!", err)
+	}
 
 	services.Instance().UserService.Init()
 }
