@@ -9,8 +9,6 @@ import (
 
 var dB *sql.DB
 
-var IDGenerator *GIDGenerator
-
 // Init
 //
 //	@Description: 初始化数据库
@@ -35,13 +33,6 @@ func Init(user string, psw string, ip string, port string, dbName string) error 
 	if err := dB.Ping(); err != nil {
 		return err
 	}
-
-	if g, err := NewIDGenerator(1); err != nil {
-		return err
-	} else {
-		IDGenerator = g
-	}
-
 	return nil
 }
 
@@ -54,15 +45,6 @@ func GetDB() *sql.DB {
 		return dB
 	} else {
 		log.Println("DB is not Init!!!")
-		return nil
-	}
-}
-
-func GetIDGenerator() *GIDGenerator {
-	if IDGenerator != nil {
-		return IDGenerator
-	} else {
-		log.Println("ID Generator is not Init!!!")
 		return nil
 	}
 }

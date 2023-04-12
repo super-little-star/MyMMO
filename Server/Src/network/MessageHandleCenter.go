@@ -7,16 +7,16 @@ import (
 	"time"
 )
 
-type GMessagePackage struct {
-	sender  *GConnection
-	message *ProtoMessage.NetMessage
-}
-
 type IMessageHandleCenter interface {
 	Init()
 	Start(count int32)
 	Stop()
 	AcceptMessage(sender *GConnection, message *ProtoMessage.NetMessage)
+}
+
+type GMessagePackage struct {
+	sender  *GConnection
+	message *ProtoMessage.NetMessage
 }
 
 type GMessageHandleCenter struct {
@@ -32,6 +32,7 @@ func (m *GMessageHandleCenter) Init() {
 	m.isRunning = false
 	m.goroutinesCount = 0
 	m.numRunningGoroutines = 0
+
 }
 
 // Start
@@ -42,6 +43,7 @@ func (m *GMessageHandleCenter) Init() {
 func (m *GMessageHandleCenter) Start(count int32) {
 	m.isRunning = true
 
+	// 把Goroutines数量控制在1000个以内
 	if count <= 1 {
 		m.goroutinesCount = 1
 	} else if count > 1000 {
@@ -66,6 +68,7 @@ func (m *GMessageHandleCenter) Start(count int32) {
 func (m *GMessageHandleCenter) Stop() {
 	close(m.chanMessages)
 	m.isRunning = false
+
 	for m.numRunningGoroutines > 0 {
 		time.Sleep(100 * time.Millisecond)
 	}
@@ -75,13 +78,13 @@ func (m *GMessageHandleCenter) Stop() {
 func (m *GMessageHandleCenter) messageDelivery() {
 	//使用原子变量对运行的Goroutines计数
 	atomic.AddInt32(&m.numRunningGoroutines, 1)
-	mlog.Info.Printf("Message Delivery [No.%d]Goroutines Start...", m.numRunningGoroutines)
-	defer atomic.AddInt32(&m.numRunningGoroutines, -1)
-	for m.isRunning {
+	mlog.Info.Printf("Message Delivery [No.%d]Goroutines is Start ...", m.numRunningGoroutines)
+	for true {
 		select {
 		case pkg, ok := <-m.chanMessages:
-			if !ok {
-				mlog.Warning.Printf("chan messages is Closed...")
+			if !ok { // 如果chanMessages 通道被关闭，就是要停止分发信息
+				atomic.AddInt32(&m.numRunningGoroutines, -1)
+				mlog.Warning.Printf("chan messages is Closed and Message Delivery [No.%d]Goroutines is Stop !!!", m.numRunningGoroutines+1)
 				return
 			}
 			// 把消息发送给Handout处理

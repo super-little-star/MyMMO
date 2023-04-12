@@ -1,4 +1,4 @@
-package DB
+package xuid
 
 import (
 	"errors"
@@ -18,25 +18,32 @@ const (
 
 )
 
-type GIDGenerator struct {
+type IGenerator interface {
+	NextId() int64
+}
+
+type GGenerator struct {
 	mu        sync.Mutex
 	timeStamp int64
 	workerId  int64
 	number    int64
 }
 
-func NewIDGenerator(workerId int64) (*GIDGenerator, error) {
+var Generator IGenerator
+
+func Init(workerId int64) error {
 	if workerId < 0 || workerId > workerMax {
-		return nil, errors.New("workerId is overflow")
+		return errors.New("workerId is overflow")
 	}
-	return &GIDGenerator{
+	Generator = &GGenerator{
 		timeStamp: 0,
 		workerId:  workerId,
 		number:    0,
-	}, nil
+	}
+	return nil
 }
 
-func (w *GIDGenerator) NextId() int64 {
+func (w *GGenerator) NextId() int64 {
 	w.mu.Lock()
 	defer w.mu.Unlock()
 	//当前时间的毫秒时间戳
