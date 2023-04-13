@@ -3,12 +3,13 @@ using ProtoMessage;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class UserSerice : Singleton<UserSerice>, IDisposable
 {
-    public UnityAction<Result, string> OnRegisterCallback;
+    public UnityAction<Result,ProtoMessage.Error> OnRegisterCallback;
 
     public void Init()
     {
@@ -25,11 +26,15 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
     {
         Debug.LogFormat("SendUserRegister:: UserName[{0}],Password[{1}]",userName,password);
 
-        NetMessage msg = new NetMessage();
-        msg.Request = new  NetMessageRequest();
-        msg.Request.userRegister = new NUserRegisterRequest();
-        msg.Request.userRegister.userName = userName;
-        msg.Request.userRegister.Passward = password;
+        NetMessage msg = new()
+        {
+            Request = new()
+        };
+        msg.Request.userRegister = new()
+        {
+            userName = userName,
+            Passward = password
+        };
 
         NetClient.Instance.Send(msg);
     }
@@ -37,8 +42,8 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
     private void OnUserRegister(object message)
     {
         NUserRegisterResponse response = (NUserRegisterResponse)message; 
-        Debug.LogFormat("OnUserRegister:: Result[{0}],Message[{1}]", response.Result, response.Errormsg);
+        Debug.LogFormat("OnUserRegister:: Result[{0}],Message[{1}]", response.Result, response.Error);
 
-        if(OnRegisterCallback != null) { OnRegisterCallback.Invoke(response.Result,response.Errormsg); }
+        OnRegisterCallback?.Invoke(response.Result, response.Error);
     }
 }

@@ -75,10 +75,16 @@ namespace ProtoMessage
         [global::ProtoBuf.ProtoMember(1, Name = @"result")]
         public Result Result { get; set; }
 
-        [global::ProtoBuf.ProtoMember(2, Name = @"errormsg")]
-        [global::System.ComponentModel.DefaultValue("")]
-        public string Errormsg { get; set; } = "";
+        [global::ProtoBuf.ProtoMember(2, Name = @"error")]
+        public Error Error { get; set; }
 
+    }
+
+    [global::ProtoBuf.ProtoContract()]
+    public enum Error
+    {
+        None = 0,
+        UserNameExist = 1,
     }
 
     [global::ProtoBuf.ProtoContract(Name = @"RESULT")]

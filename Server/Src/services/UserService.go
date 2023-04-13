@@ -1,9 +1,11 @@
 package services
 
 import (
+	"mmo_server/DB"
+	"mmo_server/ProtoMessage"
 	"mmo_server/manager"
 	"mmo_server/network"
-	ProtoMessage "mmo_server/protocol"
+
 	"mmo_server/utils/mlog"
 )
 
@@ -33,17 +35,24 @@ func (g *GUserService) OnUserRegister(sender *network.GConnection, msg interface
 	}
 
 	mlog.Info.Printf("OnUserRegister:: UserName[%s] Password[%s]", request.UserName, request.Passward)
-	response := &ProtoMessage.NetMessage{}
-	response.Response = &ProtoMessage.NetMessageResponse{}
-	response.Response.UserRegister = &ProtoMessage.NUserRegisterResponse{}
-
-	if err := g.manager.UserRegister(request.UserName, request.Passward); err != nil {
-		response.Response.UserRegister.Result = ProtoMessage.RESULT_FAILED
-		response.Response.UserRegister.Errormsg = err.Error()
-	} else {
-		response.Response.UserRegister.Result = ProtoMessage.RESULT_SUCCESS
-		response.Response.UserRegister.Errormsg = ""
+	// 写响应消息
+	newMsg := &ProtoMessage.NetMessage{
+		Response: &ProtoMessage.NetMessageResponse{
+			UserRegister: &ProtoMessage.NUserRegisterResponse{},
+		},
 	}
 
-	sender.SendMsg(response)
+	if err := g.manager.UserRegister(request.UserName, request.Passward); err != nil {
+		newMsg.Response.UserRegister.Result = ProtoMessage.RESULT_FAILED
+		if err == DB.ErrUserNameExist { // 用户已存在
+			newMsg.Response.UserRegister.Error = ProtoMessage.Error_UserNameExist
+		}
+		newMsg.Response.UserRegister.Error = ProtoMessage.Error_None
+		mlog.Error.Printf("User Service is error : %v", err)
+	} else {
+		newMsg.Response.UserRegister.Result = ProtoMessage.RESULT_SUCCESS
+		newMsg.Response.UserRegister.Error = ProtoMessage.Error_None
+	}
+
+	sender.SendMsg(newMsg) // 将Response发送
 }

@@ -2,12 +2,14 @@ package DB
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"log"
 )
 
 var dB *sql.DB
+
+var ErrSQL = errors.New("DB :: sql is error") // 错误：执行SQL时发生错误
 
 // Init
 //
@@ -34,19 +36,6 @@ func Init(user string, psw string, ip string, port string, dbName string) error 
 		return err
 	}
 	return nil
-}
-
-// GetDB
-//
-//	@Description: 获取DB实体
-//	@return *sql.DB
-func GetDB() *sql.DB {
-	if dB != nil {
-		return dB
-	} else {
-		log.Println("DB is not Init!!!")
-		return nil
-	}
 }
 
 func Stop() {
