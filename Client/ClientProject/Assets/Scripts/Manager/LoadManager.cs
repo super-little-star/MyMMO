@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Network;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ public class LoadManager : MonoBehaviour
         Debug.Log("Connecting to server...");
         NetClient.Instance.Init("127.0.0.1", 7788);
         UserSerice.Instance.Init();
+        DOTween.Init();
 
         yield return null;
     }

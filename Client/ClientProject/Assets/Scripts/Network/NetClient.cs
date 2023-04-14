@@ -207,8 +207,7 @@ namespace Network
 
             this.OnConnecting?.Invoke(false);// 触发正在连接结束事件
 
-            this.ConnectThread?.Abort();// 终止线程，Abort会往上抛出异常
-
+            Debug.Log("finish do connection");
         }
 
         /// <summary>
