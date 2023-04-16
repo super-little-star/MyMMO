@@ -9,6 +9,7 @@ using System;
 using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine.Events;
+using UnityEditor;
 
 namespace Network
 {
@@ -37,7 +38,9 @@ namespace Network
         /// <summary>
         /// 是否正在连接
         /// </summary>
-        private bool connecting = false; 
+        public bool connecting = false;
+        public bool isShowConnecting = false;
+
         public bool Connected
         {
             get
@@ -61,7 +64,7 @@ namespace Network
         #endregion
 
         #region Event 事件
-        public UnityAction<bool> OnConnecting;
+
         #endregion
 
         /// <summary>
@@ -77,7 +80,18 @@ namespace Network
         protected override void OnStart()
         {
             this.running= true;
-            
+        }
+
+        public void Connecting(bool isConnecting)
+        {
+            if(isConnecting)
+            {
+                UIManager.Instance.Popup<UIWaitPopup>("正在连接服务器");
+            }
+            else
+            {
+                UIManager.Instance.Close(typeof(UIWaitPopup));
+            }
         }
         
         public void Update()
@@ -100,11 +114,20 @@ namespace Network
         /// <returns></returns>
         private bool KeepConnect()
         {
+            if (this.isShowConnecting!=this.connecting)
+            {
+                if (this.connecting) UIManager.Instance.Popup<UIWaitPopup>("正在连接服务器");
+                else UIManager.Instance.Close(typeof(UIWaitPopup));
+                this.isShowConnecting = this.connecting;
+            }
             if (this.connecting) return false;
+
 
             if (this.address == null) return false;
 
             if (this.Connected) return true;
+
+            if(this.ConnectThread != null) return false;
 
             ConnectToServer();
             return false;
@@ -117,7 +140,6 @@ namespace Network
         public void Close(int errorCode)
         {
             Debug.LogWarning("Close Connection ,erroro code : "+errorCode.ToString()+"\n");
-            this.connecting = false;
 
             if(this.clientSocket != null)
             {
@@ -145,10 +167,7 @@ namespace Network
 
             if (this.address == default(IPEndPoint)) { throw new Exception("Please Init address....."); }// 服务器的地址没有初始化
 
-            this.connecting = true;
-
-
-            this.OnConnecting?.Invoke(true);
+            
 
 
             if (retryTimes < retryTimesCount)
@@ -157,18 +176,36 @@ namespace Network
                 this.ConnectThread = new Thread(DoConnect);
                 this.ConnectThread.Start();
             }
+            else
+            {
+                UIComfirmPopup pop = UIManager.Instance.Popup<UIComfirmPopup>(UIPopup.Level.Error, "连接服务器失败", "连接服务器失败！请检查网络并重试", "重试", "退出");
+                pop.Btn_Comfirm.onClick.AddListener(() => { this.retryTimes = 0; });
+                pop.Btn_Cancel.onClick.AddListener(this.Quit);
+            }
+        }
+
+        private void Quit()
+        {
+#if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+
         }
         private void DoConnect()
         {
             Debug.Log("NetClient Do Connect To " + this.address.ToString());
-
+            this.connecting = true;
             // 连接到服务器
             try
             {
-                this.clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                this.clientSocket.Blocking = true;
+                this.clientSocket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
+                {
+                    Blocking = true
+                };
 
-                Debug.Log(string.Format("Connect to server {0}\n", this.address));
+                Debug.Log(string.Format("Connect to server {0}", this.address));
                 IAsyncResult result = this.clientSocket.BeginConnect(this.address, null, null);
                 bool success = result.AsyncWaitHandle.WaitOne(NET_CONNECT_TIMEOUT);
                 if (success)
@@ -193,6 +230,7 @@ namespace Network
             if (this.clientSocket.Connected)
             {
                 this.clientSocket.Blocking = false;
+                
             }
             else
             {
@@ -203,11 +241,11 @@ namespace Network
 
                 }
             }
-            this.connecting = false;
-
-            this.OnConnecting?.Invoke(false);// 触发正在连接结束事件
 
             Debug.Log("finish do connection");
+            this.connecting = false;
+
+            this.ConnectThread = null;
         }
 
         /// <summary>
@@ -336,6 +374,7 @@ namespace Network
             this.ResetBuf();
             this.connecting = false;
             this.lastSendTime = 0;
+
         }
 
         private void OnDisable()

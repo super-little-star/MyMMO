@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class UIRegister : MonoBehaviour
+public class UIRegister : UIWindow
 {
     public InputField IF_UserName;
     public InputField IF_Password;
@@ -33,9 +33,11 @@ public class UIRegister : MonoBehaviour
             return val;
         }
     }
-    private void Start()
+
+    protected override void OnStart()
     {
-        if(Btn_Register!=null) Btn_Register.onClick.AddListener(OnRegisterClick);
+        base.OnStart();
+        if (Btn_Register != null) Btn_Register.onClick.AddListener(OnRegisterClick);
     }
 
     
@@ -47,7 +49,7 @@ public class UIRegister : MonoBehaviour
     {
         if (IsNull) return;
 
-        this.Show();
+
         if (IsInputEmpty())
         {
             // TODO µ¯´°ËµÃ÷
@@ -83,16 +85,10 @@ public class UIRegister : MonoBehaviour
 
     }
 
-    public void Hide()
+    public override void Close()
     {
-        this.transform.gameObject.SetActive(false);
-    }
-    public void Show()
-    {
-        this.transform.gameObject.SetActive(true);
-        if (Btn_Register != null) Btn_Register.interactable = false;
-        transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
-        transform.DOScale(1f, 0.3f).SetEase(Ease.OutElastic).OnComplete(() => { if (Btn_Register != null) Btn_Register.interactable = true; });
+        base.Close();
+        UIManager.Instance.Open<UILogin>();
     }
 
     /// <summary>
