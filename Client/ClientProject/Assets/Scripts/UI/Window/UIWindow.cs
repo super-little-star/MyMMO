@@ -9,9 +9,13 @@ public class UIWindow : UIBase
 {
     public Button Btn_X;
 
-    protected override void OnStart()
+    private void Start()
     {
-        base.OnStart();
+        this.OnStart();
+    }
+
+    protected virtual void OnStart()
+    {
         if (Btn_X != null) Btn_X.onClick.AddListener(this.Close);
     }
 

@@ -52,7 +52,7 @@ public class UIRegister : UIWindow
 
         if (IsInputEmpty())
         {
-            // TODO µ¯´°ËµÃ÷
+            
             return;
         }
 
@@ -83,6 +83,19 @@ public class UIRegister : UIWindow
 
        
 
+    }
+
+    private void OnRegisterCallback(ProtoMessage.Result result,ProtoMessage.Error error)
+    {
+        if(result == ProtoMessage.Result.Success)
+        {
+            UIInfoPopup pop = UIManager.Instance.InfoPopup(UIPopup.Level.Normal, "×¢²á³É¹¦");
+            pop.AddComfirmEvent(this.Close);
+        }
+        else
+        {
+            UIManager.Instance.InfoPopup(UIPopup.Level.Error, "×¢²áÊ§°Ü");
+        }
     }
 
     public override void Close()

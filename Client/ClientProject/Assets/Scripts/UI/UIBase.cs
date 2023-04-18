@@ -6,27 +6,6 @@ using UnityEngine;
 public abstract class UIBase : MonoBehaviour
 {
     
-    void Start()
-    {
-        this.OnStart();
-    }
-
-    
-    void Update()
-    {
-        this.OnUpdate();
-    }
-
-    protected virtual void OnStart()
-    {
-
-    }
-
-    protected virtual void OnUpdate()
-    {
-
-    }
-
     public virtual void Open()
     {
         if (transform.gameObject.activeSelf == true) return;
@@ -36,6 +15,11 @@ public abstract class UIBase : MonoBehaviour
     }
     public virtual void Close()
     {
-        UIManager.Instance.Close(this.GetType());
+        GameObject.Destroy(this.gameObject);
+    }
+
+    public virtual void Hide()
+    {
+        this.gameObject.SetActive(false);
     }
 }

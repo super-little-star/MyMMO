@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,8 +14,8 @@ public class UIPopup : UIBase
     }
 
     protected Color Normal = Color.white;
-    protected Color Warnning = new(221, 199, 117);
-    protected Color Error = new(238, 125, 73);
+    protected Color Warnning = new(0.8666667f, 0.7803922f, 0.4588236f);
+    protected Color Error = new(1f, 0.3142193f, 0f);
 
     /// <summary>
     /// 弹窗上的内容组件
@@ -23,7 +24,7 @@ public class UIPopup : UIBase
     /// <summary>
     /// 弹窗内容
     /// </summary>
-    public string content
+    public string Content
     {
         get
         {
@@ -36,11 +37,7 @@ public class UIPopup : UIBase
         }
     }
 
-    protected override void OnStart()
-    {
-        base.OnStart();
 
-    }
 
     public void SetContentColor(Level level = Level.Normal)
     {

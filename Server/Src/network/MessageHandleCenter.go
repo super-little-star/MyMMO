@@ -1,7 +1,7 @@
 package network
 
 import (
-	ProtoMessage "mmo_server/protocol"
+	ProtoMessage "mmo_server/ProtoMessage"
 	"mmo_server/utils/mlog"
 	"sync/atomic"
 	"time"

@@ -14,11 +14,11 @@ type GUserService struct {
 }
 
 func (g *GUserService) Init() {
-	network.LoginEvent[*ProtoMessage.NUserRegisterRequest](g.OnUserRegister)
+	network.LoginEvent[*ProtoMessage.RegisterRequest](g.OnUserRegister)
 	g.manager = manager.NewUserManager()
 }
 func (g *GUserService) Stop() {
-	network.LogoffEvent[*ProtoMessage.NUserRegisterRequest]()
+	network.LogoffEvent[*ProtoMessage.RegisterRequest]()
 }
 
 // OnUserRegister
@@ -28,7 +28,7 @@ func (g *GUserService) Stop() {
 //	@param sender 发送者
 //	@param msg 消息
 func (g *GUserService) OnUserRegister(sender *network.GConnection, msg interface{}) {
-	request, ok := msg.(*ProtoMessage.NUserRegisterRequest)
+	request, ok := msg.(*ProtoMessage.RegisterRequest)
 	if !ok {
 		mlog.Warning.Printf("Message[NUserRegisterRequest] 强转失败")
 		return
@@ -38,20 +38,20 @@ func (g *GUserService) OnUserRegister(sender *network.GConnection, msg interface
 	// 写响应消息
 	newMsg := &ProtoMessage.NetMessage{
 		Response: &ProtoMessage.NetMessageResponse{
-			UserRegister: &ProtoMessage.NUserRegisterResponse{},
+			Register: &ProtoMessage.RegisterResponse{},
 		},
 	}
 
 	if err := g.manager.UserRegister(request.UserName, request.Passward); err != nil {
-		newMsg.Response.UserRegister.Result = ProtoMessage.RESULT_FAILED
+		newMsg.Response.Register.Result = ProtoMessage.RESULT_FAILED
 		if err == DB.ErrUserNameExist { // 用户已存在
-			newMsg.Response.UserRegister.Error = ProtoMessage.Error_UserNameExist
+			newMsg.Response.Register.Error = ProtoMessage.Error_UserNameExist
 		}
-		newMsg.Response.UserRegister.Error = ProtoMessage.Error_None
+		newMsg.Response.Register.Error = ProtoMessage.Error_None
 		mlog.Error.Printf("User Service is error : %v", err)
 	} else {
-		newMsg.Response.UserRegister.Result = ProtoMessage.RESULT_SUCCESS
-		newMsg.Response.UserRegister.Error = ProtoMessage.Error_None
+		newMsg.Response.Register.Result = ProtoMessage.RESULT_SUCCESS
+		newMsg.Response.Register.Error = ProtoMessage.Error_None
 	}
 
 	sender.SendMsg(newMsg) // 将Response发送

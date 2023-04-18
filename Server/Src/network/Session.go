@@ -1,6 +1,6 @@
 package network
 
-import ProtoMessage "mmo_server/protocol"
+import ProtoMessage "mmo_server/ProtoMessage"
 
 // TODO 用户数据实体
 

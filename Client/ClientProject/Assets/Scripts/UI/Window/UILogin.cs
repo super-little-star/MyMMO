@@ -21,6 +21,12 @@ public class UILogin : UIWindow
         }
     }
 
+    public override void Open()
+    {
+        base.Open();
+        this.ResetUI();
+    }
+
     protected override void OnStart()
     {
         base.OnStart();
@@ -33,10 +39,10 @@ public class UILogin : UIWindow
 
     private void OnLoginClick()
     {
-        UIManager.Instance.Popup<UIWaitPopup>("正在登陆中");
+
         if(IsInputEmpty())
         {
-            // TODO 有空输入处理
+            UIManager.Instance.InfoPopup(UIPopup.Level.Error, "用户名&密码不能为空");
             return;
         }
 

@@ -10,6 +10,7 @@ var (
 )
 
 func UserRegister(uid int64, userName string, psw string, rt int64) error {
+
 	s := "SELECT userName FROM DBUser WHERE userName = ? LIMIT 1"
 	row := dB.QueryRow(s, userName)
 	var name string

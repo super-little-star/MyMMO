@@ -3,7 +3,7 @@ package network
 import (
 	"encoding/binary"
 	"io"
-	ProtoMessage "mmo_server/protocol"
+	ProtoMessage "mmo_server/ProtoMessage"
 	"mmo_server/utils/mlog"
 	"net"
 )

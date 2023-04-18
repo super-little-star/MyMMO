@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"google.golang.org/protobuf/proto"
-	ProtoMessage "mmo_server/protocol"
+	ProtoMessage "mmo_server/ProtoMessage"
 	"mmo_server/utils/mlog"
 )
 

@@ -78,49 +78,48 @@ public class UIManager : MonoSingleton<UIManager>
             if (data.Instance == null) return;
             if(data.IsReusable)
             {
-                data.Instance.gameObject.SetActive(false);
+                data.Instance.Hide();
             }
             else
             {
-                GameObject.Destroy(data.Instance.gameObject);
+                data.Instance.Close();
                 data.Instance = null;
             }
         }
     }
 
+
     /// <summary>
     /// 确认弹窗
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     /// <param name="level">内容等级</param>
     /// <param name="title">标题</param>
     /// <param name="content">内容</param>
     /// <param name="btnComfirmText">确认按钮的文字</param>
     /// <param name="btnCancelText">取消按钮的文字</param>
     /// <returns></returns>
-    public T Popup<T>(UIPopup.Level level, string title, string content, string btnComfirmText = "确认", string btnCancelText = "取消") where T : UIComfirmPopup
+    public UIComfirmPopup ComfirmPopup(UIPopup.Level level, string title, string content, string btnComfirmText = "确认", string btnCancelText = "取消")
     {
-        T val = Open<T>();
-        if(val != default)
+        UIComfirmPopup c = Open<UIComfirmPopup>();
+        if (c != default)
         {
-            val.SetContent(level, title, content, btnComfirmText, btnCancelText);
+            c.SetContent(level, title, content, btnComfirmText, btnCancelText);
         }
-        return val;
+        return c;
     }
 
     /// <summary>
     /// 信息弹窗
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     /// <param name="level">信息内容等级</param>
     /// <param name="content">内容</param>
     /// <returns></returns>
-    public T Popup<T>(UIPopup.Level level,string content) where T : UIInfoPopup
+    public UIInfoPopup InfoPopup(UIPopup.Level level, string content)
     {
-        T val = Open<T>();
-        if(val != default)
+        UIInfoPopup val = Open<UIInfoPopup>();
+        if (val != default)
         {
-            val.content = content;
+            val.Content = content;
         }
         val.SetContentColor(level);
         return val;
@@ -129,16 +128,17 @@ public class UIManager : MonoSingleton<UIManager>
     /// <summary>
     /// 等待弹窗
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     /// <param name="content"></param>
     /// <returns></returns>
-    public T Popup<T>(string content) where T : UIWaitPopup
+    public UIWaitPopup WaitPopup(string content)
     {
-        T val =  Open<T>();
+        UIWaitPopup val = Open<UIWaitPopup>();
         if (val != default)
         {
-            val.content = content;
+            val.Content = content;
         }
         return val;
     }
+
+    
 }

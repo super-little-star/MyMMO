@@ -310,9 +310,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f7886d118278e64d8710a1c16655aad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Normal: {r: 1, g: 1, b: 1, a: 1}
-  Warnning: {r: 0, g: 0, b: 0, a: 1}
-  Error: {r: 0, g: 0, b: 0, a: 1}
   T_Content: {fileID: 1096375502548287689}
   T_Title: {fileID: 2145979874839369634}
   Btn_Comfirm: {fileID: 1339405307089034354}
@@ -737,7 +734,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9339623, g: 0.48952687, b: 0.2863564, a: 1}
+  m_Color: {r: 0.86666673, g: 0.7803922, b: 0.45882356, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

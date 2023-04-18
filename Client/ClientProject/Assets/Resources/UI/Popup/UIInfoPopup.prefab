@@ -419,8 +419,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Normal: {r: 1, g: 1, b: 1, a: 1}
-  Warnning: {r: 221, g: 199, b: 117, a: 1}
-  Error: {r: 238, g: 125, b: 73, a: 1}
+  Warnning: {r: 0.86666673, g: 0.7803922, b: 0.45882356, a: 1}
+  Error: {r: 1, g: 0.3142193, b: 0, a: 1}
   T_Content: {fileID: 9149596023108722254}
   Btn_Comfirm: {fileID: 7158604275105170165}
 --- !u!1001 &4459167695619538097

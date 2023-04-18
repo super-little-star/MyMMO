@@ -13,9 +13,9 @@ using UnityEditor;
 
 namespace Network
 {
-    public class NetClient : MonoSingleton<NetClient>
+    public class NetWork : MonoSingleton<NetWork>
     {
-        public NetClient() { }
+        public NetWork() { }
 
         PackageHandler packageHandler = new PackageHandler();
 
@@ -38,8 +38,10 @@ namespace Network
         /// <summary>
         /// 是否正在连接
         /// </summary>
-        public bool connecting = false;
-        public bool isShowConnecting = false;
+        private bool connecting = false;
+        private bool isShowConnecting = false;
+        private bool isShowRetry = false;
+
 
         public bool Connected
         {
@@ -82,17 +84,7 @@ namespace Network
             this.running= true;
         }
 
-        public void Connecting(bool isConnecting)
-        {
-            if(isConnecting)
-            {
-                UIManager.Instance.Popup<UIWaitPopup>("正在连接服务器");
-            }
-            else
-            {
-                UIManager.Instance.Close(typeof(UIWaitPopup));
-            }
-        }
+
         
         public void Update()
         {
@@ -116,7 +108,7 @@ namespace Network
         {
             if (this.isShowConnecting!=this.connecting)
             {
-                if (this.connecting) UIManager.Instance.Popup<UIWaitPopup>("正在连接服务器");
+                if (this.connecting) UIManager.Instance.WaitPopup(string.Format("正在连接服务器[{0}/{1}]",retryTimes,retryTimesCount));
                 else UIManager.Instance.Close(typeof(UIWaitPopup));
                 this.isShowConnecting = this.connecting;
             }
@@ -178,14 +170,20 @@ namespace Network
             }
             else
             {
-                UIComfirmPopup pop = UIManager.Instance.Popup<UIComfirmPopup>(UIPopup.Level.Error, "连接服务器失败", "连接服务器失败！请检查网络并重试", "重试", "退出");
-                pop.Btn_Comfirm.onClick.AddListener(() => { this.retryTimes = 0; });
-                pop.Btn_Cancel.onClick.AddListener(this.Quit);
+                if (!isShowRetry)
+                {
+                    UIComfirmPopup pop = UIManager.Instance.ComfirmPopup(UIPopup.Level.Error, "连接服务器失败", "连接服务器失败！请检查网络并重试", "重试", "退出");
+
+                    pop.AddComfirmEvent(() => { this.retryTimes = 0; this.isShowRetry = false; });
+                    pop.AddCancelEvent(this.Quit);
+                    isShowRetry = true;
+                }
             }
         }
 
         private void Quit()
         {
+            isShowRetry = false;
 #if UNITY_EDITOR
             EditorApplication.isPlaying = false;
 #else
@@ -236,10 +234,6 @@ namespace Network
             {
                 this.retryTimes++;
                 Debug.LogWarningFormat("Retry[{0}] To Connect to service", retryTimes);
-                if (this.retryTimes >= this.retryTimesCount)
-                {
-
-                }
             }
 
             Debug.Log("finish do connection");

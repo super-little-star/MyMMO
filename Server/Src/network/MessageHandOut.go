@@ -1,7 +1,7 @@
 package network
 
 import (
-	ProtoMessage "mmo_server/protocol"
+	ProtoMessage "mmo_server/ProtoMessage"
 	"mmo_server/utils/mlog"
 	"reflect"
 )
@@ -31,8 +31,8 @@ func (mh *GMessageHandOut) HandOutRequest(sender *GConnection, request *ProtoMes
 	if request == nil {
 		return
 	}
-	if request.UserRegister != nil {
-		mh.triggerEvents(sender, request.UserRegister)
+	if request.Register != nil {
+		mh.triggerEvents(sender, request.Register)
 	}
 
 }

@@ -13,12 +13,12 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
 
     public void Init()
     {
-        MessageHandOut.Instance.Login<NUserRegisterResponse>(OnUserRegister);
+        MessageHandOut.Instance.Login<RegisterRequest>(OnUserRegister);
     }
 
     public void Dispose()
     {
-        MessageHandOut.Instance.Logout<NUserRegisterResponse>(OnUserRegister);
+        MessageHandOut.Instance.Logout<RegisterResponse>(OnUserRegister);
     }
 
 
@@ -30,18 +30,18 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
         {
             Request = new()
         };
-        msg.Request.userRegister = new()
+        msg.Request.Register = new()
         {
             userName = userName,
             Passward = password
         };
 
-        NetClient.Instance.Send(msg);
+        NetWork.Instance.Send(msg);
     }
 
     private void OnUserRegister(object message)
     {
-        NUserRegisterResponse response = (NUserRegisterResponse)message; 
+        RegisterResponse response = (RegisterResponse)message; 
         Debug.LogFormat("OnUserRegister:: Result[{0}],Message[{1}]", response.Result, response.Error);
 
         OnRegisterCallback?.Invoke(response.Result, response.Error);

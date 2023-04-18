@@ -10,6 +10,33 @@ namespace ProtoMessage
 {
 
     [global::ProtoBuf.ProtoContract()]
+    public partial class PUser : global::ProtoBuf.IExtensible
+    {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
+        [global::ProtoBuf.ProtoMember(1, Name = @"uid")]
+        public long Uid { get; set; }
+
+        [global::ProtoBuf.ProtoMember(2, Name = @"characters")]
+        public global::System.Collections.Generic.List<PCharacter> Characters { get; } = new global::System.Collections.Generic.List<PCharacter>();
+
+    }
+
+    [global::ProtoBuf.ProtoContract()]
+    public partial class PCharacter : global::ProtoBuf.IExtensible
+    {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
+        [global::ProtoBuf.ProtoMember(1, Name = @"id")]
+        public int Id { get; set; }
+
+    }
+
+    [global::ProtoBuf.ProtoContract()]
     public partial class NetMessage : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
@@ -32,7 +59,7 @@ namespace ProtoMessage
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
         [global::ProtoBuf.ProtoMember(1)]
-        public NUserRegisterRequest userRegister { get; set; }
+        public RegisterRequest Register { get; set; }
 
     }
 
@@ -44,12 +71,12 @@ namespace ProtoMessage
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
         [global::ProtoBuf.ProtoMember(1)]
-        public NUserRegisterResponse userRegister { get; set; }
+        public RegisterResponse Register { get; set; }
 
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class NUserRegisterRequest : global::ProtoBuf.IExtensible
+    public partial class RegisterRequest : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -66,7 +93,39 @@ namespace ProtoMessage
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class NUserRegisterResponse : global::ProtoBuf.IExtensible
+    public partial class RegisterResponse : global::ProtoBuf.IExtensible
+    {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
+        [global::ProtoBuf.ProtoMember(1, Name = @"result")]
+        public Result Result { get; set; }
+
+        [global::ProtoBuf.ProtoMember(2, Name = @"error")]
+        public Error Error { get; set; }
+
+    }
+
+    [global::ProtoBuf.ProtoContract()]
+    public partial class LoginRequest : global::ProtoBuf.IExtensible
+    {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
+        [global::ProtoBuf.ProtoMember(1)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string userName { get; set; } = "";
+
+        [global::ProtoBuf.ProtoMember(2, Name = @"passward")]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string Passward { get; set; } = "";
+
+    }
+
+    [global::ProtoBuf.ProtoContract()]
+    public partial class LoginResponse : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
