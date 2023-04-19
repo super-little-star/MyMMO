@@ -34,18 +34,19 @@ func (gs *GGameServer) Init() {
 		mlog.Info.Println("DB Init success ...")
 	}
 
-	// 初始化用户服务
-	services.Instance().UserService.Init()
+	services.Instance().UserService.Init() // 初始化用户服务
+
+	network.Instance().MessageHandleCenter.Init() // 初始化消息处理中心
+	network.Instance().MessageHandOut.Init()      // 初始化消息分发模块
+	network.Instance().ConnectionManager.Init()   // 初始化连接管理器
 }
 
 // Start 开启GameServer逻辑
 func (gs *GGameServer) Start() {
 	gs.isRunning = true
 	gs.NetServer.Start()
-	network.Instance().MessageHandleCenter.Init() // 初始化消息处理中心
-	network.Instance().MessageHandOut.Init()      // 初始化消息分发模块
-	network.Instance().ConnectionManager.Init()   // 初始化连接管理器
-	go gs.update()                                // 开启一个携程 刷新游戏业务逻辑
+
+	go gs.update() // 开启一个携程 刷新游戏业务逻辑
 }
 
 // Stop 停止GamServer逻辑
