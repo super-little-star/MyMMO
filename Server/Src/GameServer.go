@@ -35,10 +35,6 @@ func (gs *GGameServer) Init() {
 	}
 
 	services.Instance().UserService.Init() // 初始化用户服务
-
-	network.Instance().MessageHandleCenter.Init() // 初始化消息处理中心
-	network.Instance().MessageHandOut.Init()      // 初始化消息分发模块
-	network.Instance().ConnectionManager.Init()   // 初始化连接管理器
 }
 
 // Start 开启GameServer逻辑

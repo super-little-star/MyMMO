@@ -88,4 +88,5 @@ func LogoffEvent[T any]() {
 	var t T
 	key := reflect.TypeOf(t).String()
 	Instance().MessageHandOut.RemoveEvent(key)
+	mlog.Info.Printf("LogoffEvent Message Event[%s] success", key)
 }
