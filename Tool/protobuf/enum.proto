@@ -1,0 +1,14 @@
+syntax = "proto3";
+option go_package = "./ProtoMessage;ProtoMessage";
+option csharp_namespace = "ProtoMessage"; 
+package ProtoMessage;
+
+////////////////////////////////////////////////////////////////
+//
+//  Enum
+//
+////////////////////////////////////////////////////////////////
+enum RESULT {
+    SUCCESS = 0;
+    FAILED = 1;
+}

@@ -3,16 +3,12 @@ option go_package = "./ProtoMessage;ProtoMessage";
 option csharp_namespace = "ProtoMessage"; 
 package ProtoMessage;
 
-////////////////////////////////////////////////////////////////
-//
-//  Error
-//
-////////////////////////////////////////////////////////////////
+import "request.proto";
+import "response.proto";
 
-enum Error {
-    None = 0;
-    UserNameExist = 1;
-}
+
+
+
 
 ////////////////////////////////////////////////////////////////
 //
@@ -20,20 +16,6 @@ enum Error {
 //
 ////////////////////////////////////////////////////////////////
 
-enum RESULT {
-    SUCCESS = 0;
-    FAILED = 1;
-}
-
-message PUser {
-    int64 uid = 1;
-    repeated PCharacter characters = 2;
-}
-
-message PCharacter {
-    int32 id = 1;
-
-}
 
 ////////////////////////////////////////////////////////////////
 //
@@ -53,21 +35,4 @@ message NetMessageResponse{
     RegisterResponse Register = 1;
 }
 
-message RegisterRequest {
-    string userName = 1;
-    string passward = 2;
-}
-message RegisterResponse {
-    RESULT result = 1;
-    Error error  = 2;
-}
 
-message LoginRequest {
-    string userName = 1;
-    string passward = 2;
-}
-
-message LoginResponse {
-    RESULT  result = 1;
-    Error error = 2;
-}

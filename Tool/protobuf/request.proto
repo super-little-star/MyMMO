@@ -1,0 +1,15 @@
+syntax = "proto3";
+option go_package = "./ProtoMessage;ProtoMessage";
+option csharp_namespace = "ProtoMessage"; 
+package ProtoMessage;
+
+
+message RegisterRequest {
+    string userName = 1;
+    string passward = 2;
+}
+
+message LoginRequest {
+    string userName = 1;
+    string passward = 2;
+}

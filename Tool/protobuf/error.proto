@@ -1,0 +1,15 @@
+syntax = "proto3";
+option go_package = "./ProtoMessage;ProtoMessage";
+option csharp_namespace = "ProtoMessage"; 
+package ProtoMessage;
+
+
+////////////////////////////////////////////////////////////////
+//
+//  Error
+//
+////////////////////////////////////////////////////////////////
+enum Error {
+    None = 0;
+    UserNameExist = 1;
+}
