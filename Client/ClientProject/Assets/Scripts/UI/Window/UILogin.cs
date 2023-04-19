@@ -25,12 +25,7 @@ public class UILogin : UIWindow
     {
         base.Open();
         this.ResetUI();
-    }
-
-    protected override void OnStart()
-    {
-        base.OnStart();
-        if(!IsNull)
+        if (!IsNull)
         {
             Btn_Login.onClick.AddListener(OnLoginClick);
             Btn_Register.onClick.AddListener(OnRegisterClick);
@@ -46,7 +41,7 @@ public class UILogin : UIWindow
             return;
         }
 
-
+        
     }
 
     private void OnRegisterClick()

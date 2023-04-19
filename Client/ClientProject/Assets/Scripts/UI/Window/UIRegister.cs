@@ -34,9 +34,9 @@ public class UIRegister : UIWindow
         }
     }
 
-    protected override void OnStart()
+    public override void Open()
     {
-        base.OnStart();
+        base.Open();
         if (Btn_Register != null) Btn_Register.onClick.AddListener(OnRegisterClick);
     }
 
@@ -52,56 +52,49 @@ public class UIRegister : UIWindow
 
         if (IsInputEmpty())
         {
-            
+            UIManager.Instance.InfoPopup(UIPopup.Level.Warnning, "输入不能为空");
             return;
         }
 
 
         if(!T_Agree.isOn)
         {
-            // TODO 弹窗说明
+            UIManager.Instance.InfoPopup(UIPopup.Level.Warnning, "请勾选同意用户协定");
             return;
         }
         if(!Regex.IsMatch(IF_UserName.text, UserNameRegular))
         {
-            // TODO 弹窗说明
+            UIManager.Instance.InfoPopup(UIPopup.Level.Warnning, "用户名存在非法输入");
             return;
         }
         if(!Regex.IsMatch(IF_Password.text, PasswordRegular))
         {
-            // TODO 弹窗说明
+            UIManager.Instance.InfoPopup(UIPopup.Level.Warnning, "密码存在非法输入");
             return;
         }
 
         if(IF_Password.text != IF_Comfirm.text)
         {
-            // TODO 弹窗说明
+            UIManager.Instance.InfoPopup(UIPopup.Level.Warnning, "两次密码输入不一致");
             return;
         }
 
         UserSerice.Instance.SendUserRegister(IF_UserName.text,IF_Password.text);
 
-       
-
     }
 
-    private void OnRegisterCallback(ProtoMessage.Result result,ProtoMessage.Error error)
-    {
-        if(result == ProtoMessage.Result.Success)
-        {
-            UIInfoPopup pop = UIManager.Instance.InfoPopup(UIPopup.Level.Normal, "注册成功");
-            pop.AddComfirmEvent(this.Close);
-        }
-        else
-        {
-            UIManager.Instance.InfoPopup(UIPopup.Level.Error, "注册失败");
-        }
-    }
 
     public override void Close()
     {
         base.Close();
+        if (Btn_Register != null) Btn_Register.onClick.RemoveAllListeners();
         UIManager.Instance.Open<UILogin>();
+    }
+
+    public override void Hide()
+    {
+        base.Hide();
+        if (Btn_Register != null) Btn_Register.onClick.RemoveAllListeners();
     }
 
     /// <summary>

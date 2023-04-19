@@ -9,11 +9,12 @@ using UnityEngine.Events;
 
 public class UserSerice : Singleton<UserSerice>, IDisposable
 {
-    public UnityAction<Result,ProtoMessage.Error> OnRegisterCallback;
+    public UnityAction<Result, ProtoMessage.Error> OnRegisterCallback;
 
     public void Init()
     {
-        MessageHandOut.Instance.Login<RegisterRequest>(OnUserRegister);
+        UserManager.Instance.Init();
+        MessageHandOut.Instance.Login<RegisterResponse>(OnUserRegister);
     }
 
     public void Dispose()

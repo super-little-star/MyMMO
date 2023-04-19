@@ -292,7 +292,7 @@ namespace Network
                         this.Close(0);
                         return false;
                     }
-                    this.packageHandler.ReceiveMsg(this.receiveBuffer.GetBuffer());
+                    this.packageHandler.ReceiveMsg(this.receiveBuffer.GetBuffer(),n);
                 }
             }
             catch(Exception e)

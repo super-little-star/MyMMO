@@ -9,14 +9,21 @@ public class UIWindow : UIBase
 {
     public Button Btn_X;
 
-    private void Start()
+    public override void Open()
     {
-        this.OnStart();
-    }
-
-    protected virtual void OnStart()
-    {
+        base.Open();
         if (Btn_X != null) Btn_X.onClick.AddListener(this.Close);
     }
 
+    public override void Close()
+    {
+        base.Close();
+        if (Btn_X != null) Btn_X.onClick.RemoveAllListeners();
+    }
+
+    public override void Hide()
+    {
+        base.Hide();
+        if (Btn_X != null) Btn_X.onClick.RemoveAllListeners();
+    }
 }

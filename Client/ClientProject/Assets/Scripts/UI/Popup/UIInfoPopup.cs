@@ -8,8 +8,10 @@ public class UIInfoPopup : UIPopup
 {
     public Button Btn_Comfirm;
 
-    private void Start()
+
+    public override void Open()
     {
+        base.Open();
         if (Btn_Comfirm != null) Btn_Comfirm.onClick.AddListener(this.Hide);
     }
 

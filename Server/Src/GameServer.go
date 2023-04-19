@@ -42,7 +42,10 @@ func (gs *GGameServer) Init() {
 func (gs *GGameServer) Start() {
 	gs.isRunning = true
 	gs.NetServer.Start()
-	go gs.update() // 开启一个携程 刷新游戏业务逻辑
+	network.Instance().MessageHandleCenter.Init() // 初始化消息处理中心
+	network.Instance().MessageHandOut.Init()      // 初始化消息分发模块
+	network.Instance().ConnectionManager.Init()   // 初始化连接管理器
+	go gs.update()                                // 开启一个携程 刷新游戏业务逻辑
 }
 
 // Stop 停止GamServer逻辑
