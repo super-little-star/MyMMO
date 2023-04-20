@@ -34,6 +34,9 @@ namespace ProtoMessage
         [global::ProtoBuf.ProtoMember(1)]
         public RegisterRequest Register { get; set; }
 
+        [global::ProtoBuf.ProtoMember(2)]
+        public LoginRequest Login { get; set; }
+
     }
 
     [global::ProtoBuf.ProtoContract()]
@@ -45,6 +48,9 @@ namespace ProtoMessage
 
         [global::ProtoBuf.ProtoMember(1)]
         public RegisterResponse Register { get; set; }
+
+        [global::ProtoBuf.ProtoMember(2)]
+        public LoginResponse Login { get; set; }
 
     }
 

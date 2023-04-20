@@ -42,9 +42,22 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
 
     private void OnUserRegister(object message)
     {
-        RegisterResponse response = (RegisterResponse)message; 
+        RegisterResponse response = (RegisterResponse)message;
         Debug.LogFormat("OnUserRegister:: Result[{0}],Message[{1}]", response.Result, response.Error);
 
         OnRegisterCallback?.Invoke(response.Result, response.Error);
+    }
+
+    public void SendUserLogin(string userName,string password)
+    {
+        Debug.LogFormat("SendUserLogin:: UserName[{0}],Password[{1}]",userName,password);
+
+        NetMessage msg = new()
+        {
+            Request = new()
+            {
+                
+            }
+        };
     }
 }

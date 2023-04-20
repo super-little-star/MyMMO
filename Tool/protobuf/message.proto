@@ -7,16 +7,6 @@ import "request.proto";
 import "response.proto";
 
 
-
-
-
-////////////////////////////////////////////////////////////////
-//
-//  Data Basic
-//
-////////////////////////////////////////////////////////////////
-
-
 ////////////////////////////////////////////////////////////////
 //
 //  Messages
@@ -29,10 +19,12 @@ message NetMessage {
 
 message NetMessageRequest{
     RegisterRequest Register = 1;
+    LoginRequest Login = 2;
 }
 
 message NetMessageResponse{
     RegisterResponse Register = 1;
+    LoginResponse Login = 2;
 }
 
 

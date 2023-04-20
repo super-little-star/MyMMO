@@ -37,6 +37,9 @@ namespace ProtoMessage
         [global::ProtoBuf.ProtoMember(2, Name = @"error")]
         public Error Error { get; set; }
 
+        [global::ProtoBuf.ProtoMember(3, Name = @"user")]
+        public PUser User { get; set; }
+
     }
 
 }
