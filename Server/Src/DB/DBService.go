@@ -2,14 +2,11 @@ package DB
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var dB *sql.DB
-
-var ErrSQL = errors.New("DB :: sql is error") // 错误：执行SQL时发生错误
 
 // Init
 //

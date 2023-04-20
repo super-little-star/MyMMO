@@ -44,10 +44,13 @@ func (g *GUserService) OnUserRegister(sender *network.GConnection, msg interface
 
 	if err := g.manager.UserRegister(request.UserName, request.Passward); err != nil {
 		newMsg.Response.Register.Result = ProtoMessage.RESULT_FAILED
-		if err == DB.ErrUserNameExist { // 用户已存在
+		switch err {
+		case DB.ErrUserNameExist:
 			newMsg.Response.Register.Error = ProtoMessage.Error_UserNameExist
-		} else {
+			break
+		default:
 			newMsg.Response.Register.Error = ProtoMessage.Error_None
+			break
 		}
 		mlog.Error.Printf("User Service is error : %v", err)
 	} else {

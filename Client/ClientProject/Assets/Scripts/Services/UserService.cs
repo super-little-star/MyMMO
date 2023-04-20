@@ -22,7 +22,7 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
         MessageHandOut.Instance.Logout<RegisterResponse>(OnUserRegister);
     }
 
-
+    #region Register
     public void SendUserRegister(string userName,string password)
     {
         Debug.LogFormat("SendUserRegister:: UserName[{0}],Password[{1}]",userName,password);
@@ -37,7 +37,7 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
             Passward = password
         };
 
-        NetWork.Instance.Send(msg);
+        NetSerice.Instance.Send(msg);
     }
 
     private void OnUserRegister(object message)
@@ -47,7 +47,10 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
 
         OnRegisterCallback?.Invoke(response.Result, response.Error);
     }
+    #endregion
 
+
+    #region Login
     public void SendUserLogin(string userName,string password)
     {
         Debug.LogFormat("SendUserLogin:: UserName[{0}],Password[{1}]",userName,password);
@@ -56,8 +59,15 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
         {
             Request = new()
             {
-                
+                Login = new()
+                {
+                    userName = userName,
+                    Passward = password
+                }
             }
         };
+        
+        NetSerice.Instance.Send(msg);
     }
+    #endregion
 }

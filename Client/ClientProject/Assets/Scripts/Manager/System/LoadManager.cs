@@ -14,7 +14,7 @@ public class LoadManager : MonoBehaviour
         SceneManager.Instance.Init();
 
         Debug.Log("Connecting to server...");
-        NetWork.Instance.Init("127.0.0.1", 7788);
+        NetSerice.Instance.Init("127.0.0.1", 7788);
         UserSerice.Instance.Init();
         
 

@@ -13,9 +13,9 @@ using UnityEditor;
 
 namespace Network
 {
-    public class NetWork : MonoSingleton<NetWork>
+    public class NetSerice : MonoSingleton<NetSerice>
     {
-        public NetWork() { }
+        public NetSerice() { }
 
         PackageHandler packageHandler = new PackageHandler();
 

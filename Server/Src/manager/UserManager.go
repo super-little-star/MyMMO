@@ -34,7 +34,7 @@ func (u *GUserManager) UserRegister(userName string, psw string) error {
 		return err
 	}
 
-	if err := DB.UserRegister(uid, userName, newPsw, time.Now().Unix()); err != nil {
+	if err := DB.Register(uid, userName, newPsw, time.Now().Unix()); err != nil {
 		return err
 	}
 
