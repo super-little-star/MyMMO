@@ -18,6 +18,22 @@ namespace ProtoMessage
         Failed = 1,
     }
 
+    [global::ProtoBuf.ProtoContract()]
+    public enum CharacterClass
+    {
+        Warrior = 0,
+        Hunter = 1,
+        Sorcerer = 2,
+    }
+
+    [global::ProtoBuf.ProtoContract()]
+    public enum CharacterType
+    {
+        Player = 0,
+        Other = 1,
+        Monster = 2,
+    }
+
 }
 
 #pragma warning restore CS0612, CS0618, CS1591, CS3021, IDE0079, IDE1006, RCS1036, RCS1057, RCS1085, RCS1192

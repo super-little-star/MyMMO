@@ -3,6 +3,7 @@ package DB
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"mmo_server/DB/Model"
 	"mmo_server/utils/mlog"
 )
@@ -66,6 +67,12 @@ func Register(uid int64, userName string, psw string, rt int64) error {
 	return ErrUserNameExist
 }
 
+// GetDbUser
+//
+//	@Description: 获取用户信息
+//	@param userName
+//	@return *Model.DbUser
+//	@return error
 func GetDbUser(userName string) (*Model.DbUser, error) {
 	s := "SELECT UID,Password,CharacterCount,RegisterTime FROM DBUser WHERE userName = ? LIMIT 1"
 	row := dB.QueryRow(s, userName)
@@ -79,5 +86,46 @@ func GetDbUser(userName string) (*Model.DbUser, error) {
 		}
 	}
 	user.UserName = userName
+
 	return user, nil
+}
+
+// GetCharacters
+//
+//	@Description: 获取角色列表
+//	@param user
+//	@return error
+func GetCharacters(user *Model.DbUser) error {
+
+	var characters []*Model.DbCharacter
+	if user.CharacterCount == 0 {
+		return nil
+	}
+	str := "SELECT ID,UserID,Name,Class From DbCharacter WHERE UserID = ?"
+	rows, err := dB.Query(str, user.UID)
+	defer func() {
+		if err := rows.Close(); err != nil {
+			fmt.Printf("rows close is error:%s", err)
+		}
+	}()
+
+	if err != nil {
+		switch err {
+		case sql.ErrNoRows:
+			return nil
+		default:
+			return err
+		}
+	}
+
+	for rows.Next() {
+		c := &Model.DbCharacter{}
+		if err := rows.Scan(&c.ID, &c.UserID, &c.Name, &c.Class); err != nil {
+			return err
+		}
+		characters = append(characters, c)
+	}
+	user.Characters = characters
+
+	return nil
 }

@@ -14,6 +14,8 @@ namespace ProtoMessage
     {
         None = 0,
         UserNameExist = 1,
+        UserNotExist = 2,
+        PasswordNotMatch = 3,
     }
 
 }

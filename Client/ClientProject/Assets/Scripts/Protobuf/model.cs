@@ -31,8 +31,18 @@ namespace ProtoMessage
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
-        [global::ProtoBuf.ProtoMember(1, Name = @"id")]
+        [global::ProtoBuf.ProtoMember(1)]
         public int Id { get; set; }
+
+        [global::ProtoBuf.ProtoMember(3)]
+        [global::System.ComponentModel.DefaultValue("")]
+        public string Name { get; set; } = "";
+
+        [global::ProtoBuf.ProtoMember(4)]
+        public CharacterClass Class { get; set; }
+
+        [global::ProtoBuf.ProtoMember(5)]
+        public CharacterType Type { get; set; }
 
     }
 

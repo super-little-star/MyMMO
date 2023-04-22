@@ -10,16 +10,19 @@ using UnityEngine.Events;
 public class UserSerice : Singleton<UserSerice>, IDisposable
 {
     public UnityAction<Result, ProtoMessage.Error> OnRegisterCallback;
+    public UnityAction<LoginResponse> OnLoginCallback;
 
     public void Init()
     {
         UserManager.Instance.Init();
         MessageHandOut.Instance.Login<RegisterResponse>(OnUserRegister);
+        MessageHandOut.Instance.Login<LoginResponse>(OnUserRegister);
     }
 
     public void Dispose()
     {
         MessageHandOut.Instance.Logout<RegisterResponse>(OnUserRegister);
+        MessageHandOut.Instance.Logout<LoginResponse>(OnUserRegister);
     }
 
     #region Register
@@ -68,6 +71,14 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
         };
         
         NetSerice.Instance.Send(msg);
+    }
+
+    private void OnUserLogin(object message)
+    {
+        LoginResponse response = (LoginResponse)message;
+        Debug.LogFormat("OnUserLogin:: Result[{0}],Message[{1}]",response.Result, response.Error);
+
+        this.OnLoginCallback?.Invoke(response);
     }
     #endregion
 }

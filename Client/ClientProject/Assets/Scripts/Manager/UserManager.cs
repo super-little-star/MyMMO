@@ -9,10 +9,12 @@ public class UserManager : Singleton<UserManager>, IDisposable
     public void Init()
     {
         UserSerice.Instance.OnRegisterCallback += OnRegisterCallback;
+        UserSerice.Instance.OnLoginCallback += OnLoginCallback;
     }
     public void Dispose()
     {
         UserSerice.Instance.OnRegisterCallback -= OnRegisterCallback;
+        UserSerice.Instance.OnLoginCallback -= OnLoginCallback;
     }
 
     private void OnRegisterCallback(Result result,Error error)
@@ -37,6 +39,19 @@ public class UserManager : Singleton<UserManager>, IDisposable
                         r.ResetUI();
                     });
                 }
+                break;
+        }
+    }
+
+    private void OnLoginCallback(LoginResponse response)
+    {
+        switch(response.Result)
+        {
+            case Result.Success:
+                // TODO 进入角色选择场景
+                break;
+            case Result.Failed:
+                // TODO 错误提示
                 break;
         }
     }

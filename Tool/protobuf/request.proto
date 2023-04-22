@@ -3,7 +3,11 @@ option go_package = "./ProtoMessage;ProtoMessage";
 option csharp_namespace = "ProtoMessage"; 
 package ProtoMessage;
 
-
+////////////////////////////////////////////////////////////////
+//
+//  Request
+//
+////////////////////////////////////////////////////////////////
 message RegisterRequest {
     string userName = 1;
     string passward = 2;

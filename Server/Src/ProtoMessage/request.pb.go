@@ -20,6 +20,11 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// //////////////////////////////////////////////////////////////
+//
+//	Request
+//
+// //////////////////////////////////////////////////////////////
 type RegisterRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

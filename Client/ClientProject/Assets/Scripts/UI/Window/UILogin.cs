@@ -41,7 +41,7 @@ public class UILogin : UIWindow
             return;
         }
 
-        
+        UserSerice.Instance.SendUserLogin(IF_UserName.text, IF_Password.text);
     }
 
     private void OnRegisterClick()

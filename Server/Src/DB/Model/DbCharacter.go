@@ -1,8 +1,8 @@
 package Model
 
 type DbCharacter struct {
-	ID       int
-	UserID   int64
-	Name     string
-	Vocation int8
+	ID     int32
+	UserID int64
+	Name   string
+	Class  int32
 }
