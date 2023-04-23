@@ -8,14 +8,29 @@ import (
 	"mmo_server/utils/mlog"
 )
 
+var userService IUserService
+
+type IUserService interface {
+	Start()
+	Stop()
+}
+
 type GUserService struct {
 	manager manager.IUserManager
 }
 
-func (g *GUserService) Init() {
+func UserServiceInit() {
+	userService = &GUserService{}
+}
+
+func UserService() IUserService {
+	return userService
+}
+
+func (g *GUserService) Start() {
+	g.manager = manager.NewUserManager()
 	network.LoginEvent[*ProtoMessage.RegisterRequest](g.OnUserRegister)
 	network.LoginEvent[*ProtoMessage.LoginRequest](g.OnUserLogin)
-	g.manager = manager.NewUserManager()
 }
 func (g *GUserService) Stop() {
 	network.LogoffEvent[*ProtoMessage.RegisterRequest]()
@@ -85,17 +100,27 @@ func (g *GUserService) OnUserLogin(sender *network.GConnection, msg interface{})
 		return
 	}
 
+	// 是否已经存在该User的链接
+	if err := network.ConnectionManager().AddUser(dbUser.UID, dbUser); err != nil {
+		newMsg.Response.Login.Result = ProtoMessage.RESULT_FAILED
+		newMsg.Response.Login.Error = err2protobuf.Change(err)
+		sender.SendMsg(newMsg)
+		return
+	}
+	sender.Session().User = dbUser
+
 	newMsg.Response.Login.User = &ProtoMessage.PUser{
 		Uid:        dbUser.UID,
 		Characters: []*ProtoMessage.PCharacter{},
 	}
 
+	// 把dbUser的角色信息转换成protobuf
 	for _, c := range dbUser.Characters {
 		netCharacter := &ProtoMessage.PCharacter{
-			Id:       c.ID,
-			Name:     c.Name,
-			Vocation: interface{}(c.Class).(ProtoMessage.VOCATION),
-			Type:     ProtoMessage.CharacterType_Player,
+			Id:    c.ID,
+			Name:  c.Name,
+			Class: interface{}(c.Class).(ProtoMessage.CharacterClass),
+			Type:  ProtoMessage.CharacterType_Player,
 		}
 		newMsg.Response.Login.User.Characters = append(newMsg.Response.Login.User.Characters, netCharacter)
 	}

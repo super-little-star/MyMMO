@@ -13,10 +13,13 @@ public class LoadManager : MonoBehaviour
         UIManager.Instance.Init();
         SceneManager.Instance.Init();
 
+        DataManager.Instance.Init();
+        
         Debug.Log("Connecting to server...");
         NetSerice.Instance.Init("127.0.0.1", 7788);
         UserSerice.Instance.Init();
         
+
 
         yield return null;
     }

@@ -1,10 +1,14 @@
 package network
 
-import ProtoMessage "mmo_server/ProtoMessage"
+import (
+	"mmo_server/DB/Model"
+	ProtoMessage "mmo_server/ProtoMessage"
+)
 
 // TODO 用户数据实体
 
 type GSession struct {
+	User     *Model.DbUser
 	response *ProtoMessage.NetMessage
 }
 
@@ -13,7 +17,8 @@ func NewSession() *GSession {
 }
 
 func (ns *GSession) Disconnected() {
-	// TODO 会话断开后的处理
+	ns.User = nil
+	ns.response = nil
 }
 
 // GetNetResponse 获取Protobuf类型的Response

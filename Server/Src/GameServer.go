@@ -34,7 +34,7 @@ func (gs *GGameServer) Init() {
 		mlog.Info.Println("DB Init success ...")
 	}
 
-	services.Instance().UserService.Init() // 初始化用户服务
+	services.UserService().Start()
 }
 
 // Start 开启GameServer逻辑

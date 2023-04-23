@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+var messageHandleCenter IMessageHandleCenter
+
 type IMessageHandleCenter interface {
 	Init()
 	Start(count int32)
@@ -24,6 +26,15 @@ type GMessageHandleCenter struct {
 	isRunning            bool                  // 消息处理中心是否在运行
 	goroutinesCount      int32                 // 需要开启的Goroutines数量
 	numRunningGoroutines int32                 // 正在运行的Goroutines数量
+}
+
+func MessageHandleCenterInit() {
+	messageHandleCenter = &GMessageHandleCenter{}
+	messageHandleCenter.Init()
+}
+
+func MessageHandleCenter() IMessageHandleCenter {
+	return messageHandleCenter
 }
 
 // Init 初始化消息处理中心
@@ -89,7 +100,7 @@ func (m *GMessageHandleCenter) messageDelivery() {
 			}
 			// 把消息发送给Handout处理
 			if pkg.message.Request != nil {
-				Instance().MessageHandOut.HandOutRequest(pkg.sender, pkg.message.Request)
+				MessageHandout().HandOutRequest(pkg.sender, pkg.message.Request)
 			}
 			continue
 		}
