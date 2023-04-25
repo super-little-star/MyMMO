@@ -28,9 +28,7 @@ func Register(uid int64, userName string, psw string, rt int64) error {
 	tx, err := dB.Begin()
 
 	defer func() {
-		if err := tx.Rollback(); err != nil {
-			mlog.Error.Println("SQL Rollback err:%v", err)
-		}
+		_ = tx.Rollback()
 	}()
 	if err != nil {
 		mlog.Error.Println("Transaction begin is error: %v", err)

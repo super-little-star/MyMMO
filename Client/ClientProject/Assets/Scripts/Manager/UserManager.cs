@@ -48,10 +48,10 @@ public class UserManager : Singleton<UserManager>, IDisposable
         switch(response.Result)
         {
             case Result.Success:
-                // TODO 进入角色选择场景
+                UIManager.Instance.InfoPopup(UIPopup.Level.Normal, "登录成功");
                 break;
             case Result.Failed:
-                // TODO 错误提示
+                UIManager.Instance.InfoPopup(UIPopup.Level.Error,ProtoErr2string.Convert(response.Error)); ;
                 break;
         }
     }

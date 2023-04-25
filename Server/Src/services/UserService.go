@@ -60,7 +60,7 @@ func (g *GUserService) OnUserRegister(sender *network.GConnection, msg interface
 
 	if err := g.manager.UserRegister(request.UserName, request.Passward); err != nil {
 		newMsg.Response.Register.Result = ProtoMessage.RESULT_FAILED
-		newMsg.Response.Register.Error = err2protobuf.Change(err)
+		newMsg.Response.Register.Error = err2protobuf.Convert(err)
 		mlog.Error.Printf("User Service is error : %v", err)
 	} else {
 		newMsg.Response.Register.Result = ProtoMessage.RESULT_SUCCESS
@@ -77,13 +77,13 @@ func (g *GUserService) OnUserRegister(sender *network.GConnection, msg interface
 //	@param sender
 //	@param msg
 func (g *GUserService) OnUserLogin(sender *network.GConnection, msg interface{}) {
-	request, ok := msg.(*ProtoMessage.RegisterRequest)
+	request, ok := msg.(*ProtoMessage.LoginRequest)
 	if !ok {
 		mlog.Warning.Printf("Message[NUserRegisterRequest] 强转失败")
 		return
 	}
 
-	mlog.Info.Println("OnUserLogin:: UserName[%s] Password[%s]", request.UserName, request.Passward)
+	mlog.Info.Printf("OnUserLogin:: UserName[%s] Password[%s]", request.UserName, request.Passward)
 
 	newMsg := &ProtoMessage.NetMessage{
 		Response: &ProtoMessage.NetMessageResponse{
@@ -95,7 +95,7 @@ func (g *GUserService) OnUserLogin(sender *network.GConnection, msg interface{})
 	dbUser, err := g.manager.UserLogin(request.UserName, request.Passward)
 	if err != nil {
 		newMsg.Response.Login.Result = ProtoMessage.RESULT_FAILED
-		newMsg.Response.Login.Error = err2protobuf.Change(err)
+		newMsg.Response.Login.Error = err2protobuf.Convert(err)
 		sender.SendMsg(newMsg)
 		return
 	}
@@ -103,7 +103,7 @@ func (g *GUserService) OnUserLogin(sender *network.GConnection, msg interface{})
 	// 是否已经存在该User的链接
 	if err := network.ConnectionManager().AddUser(dbUser.UID, dbUser); err != nil {
 		newMsg.Response.Login.Result = ProtoMessage.RESULT_FAILED
-		newMsg.Response.Login.Error = err2protobuf.Change(err)
+		newMsg.Response.Login.Error = err2protobuf.Convert(err)
 		sender.SendMsg(newMsg)
 		return
 	}

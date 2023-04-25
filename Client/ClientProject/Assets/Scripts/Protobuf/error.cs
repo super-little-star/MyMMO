@@ -16,6 +16,7 @@ namespace ProtoMessage
         UserNameExist = 1,
         UserNotExist = 2,
         PasswordNotMatch = 3,
+        UserIsOnline = 4,
     }
 
 }

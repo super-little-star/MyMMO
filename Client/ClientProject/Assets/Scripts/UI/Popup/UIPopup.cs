@@ -37,6 +37,11 @@ public class UIPopup : UIBase
         }
     }
 
+    public override void Open(bool useAnimation)
+    {
+        base.Open(useAnimation);
+        this.transform.SetAsLastSibling();
+    }
 
 
     public void SetContentColor(Level level = Level.Normal)

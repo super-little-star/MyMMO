@@ -7,7 +7,7 @@ import (
 )
 
 var ErrConnIsExist = errors.New("connectionManager:: connection is exist")
-var ErrUserIsOnline = errors.New("connectionManager:: user is exist")
+var ErrUserIsOnline = errors.New("connectionManager:: user is online")
 
 var connectionManager IConnectionManager
 

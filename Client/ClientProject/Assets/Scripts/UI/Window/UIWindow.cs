@@ -9,9 +9,9 @@ public class UIWindow : UIBase
 {
     public Button Btn_X;
 
-    public override void Open()
+    public override void Open(bool useAnimation)
     {
-        base.Open();
+        base.Open(useAnimation);
         if (Btn_X != null) Btn_X.onClick.AddListener(this.Close);
     }
 

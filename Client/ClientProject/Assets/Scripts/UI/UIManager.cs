@@ -15,16 +15,23 @@ public class UIManager : MonoSingleton<UIManager>
     }
 
     private Dictionary<Type, UIData> UIPreforms = new Dictionary<Type, UIData>();
-
+    private Transform UIRoot;
 
     public void Init()
     {
+        this.UIRoot = this.transform.GetChild(0);
+
+        // Popup
         this.UIChackIn<UIWaitPopup>("UI/Popup/UIWaitPopup", true);
         this.UIChackIn<UIInfoPopup>("UI/Popup/UIInfoPopup", true);
         this.UIChackIn<UIComfirmPopup>("UI/Popup/UIComfirmPopup", true);
 
+        // Window
         this.UIChackIn<UILogin>("UI/Window/UILogin", false);
         this.UIChackIn<UIRegister>("UI/Window/UIRegister", false);
+
+        this.UIChackIn<UIBackground>("UI/UIBackground", false);
+        this.UIChackIn<UILoading>("UI/UILoading", false);
     }
 
     /// <summary>
@@ -42,8 +49,9 @@ public class UIManager : MonoSingleton<UIManager>
     /// 打开UI
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    /// <param name="useAnimation">是否使用动画</param>
     /// <returns></returns>
-    public T Open<T>() where T : UIBase
+    public T Open<T>(bool useAnimation = true,Transform root = null) where T : UIBase
     {
         Type type = typeof(T);
         UIData data;
@@ -51,15 +59,15 @@ public class UIManager : MonoSingleton<UIManager>
         {
             if (data.Instance != null)
             {
-                data.Instance.Open();
+                data.Instance.Open(useAnimation);
             }
             else
             {
                 UnityEngine.Object prefab = Resources.Load(data.Resources);
                 if (prefab == null) { return default; }
 
-                data.Instance = GameObject.Instantiate(prefab,this.transform).GetComponent<T>();
-                data.Instance.Open();
+                data.Instance = GameObject.Instantiate(prefab, root == null ? this.UIRoot : root).GetComponent<T>();
+                data.Instance.Open(useAnimation);
             }
             return (T)data.Instance;
         }
@@ -88,7 +96,17 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
 
+    public void KillAll()
+    {
+        for (int i = 0; i < this.transform.childCount; i++)
+        {
+            Transform child = this.transform.GetChild(i);
+            UIBase ui = child.GetComponent<UIBase>();
+            if (ui != null)  ui.Close();
+        }
+    }
 
+    #region Popup
     /// <summary>
     /// 确认弹窗
     /// </summary>
@@ -132,13 +150,20 @@ public class UIManager : MonoSingleton<UIManager>
     /// <returns></returns>
     public UIWaitPopup WaitPopup(string content)
     {
-        UIWaitPopup val = Open<UIWaitPopup>();
+        UIWaitPopup val = Open<UIWaitPopup>(false);
         if (val != default)
         {
             val.Content = content;
         }
         return val;
     }
+    #endregion
 
-    
+    public UILoading Loading()
+    {
+
+        return Open<UILoading>(false,this.transform);
+        
+    }
+
 }

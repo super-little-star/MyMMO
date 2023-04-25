@@ -45,6 +45,9 @@ func (mh *GMessageHandOut) HandOutRequest(sender *GConnection, request *ProtoMes
 	if request.Register != nil {
 		mh.triggerEvents(sender, request.Register)
 	}
+	if request.Login != nil {
+		mh.triggerEvents(sender, request.Login)
+	}
 
 }
 

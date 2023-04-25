@@ -21,9 +21,9 @@ public class UILogin : UIWindow
         }
     }
 
-    public override void Open()
+    public override void Open(bool useAnimation)
     {
-        base.Open();
+        base.Open(useAnimation);
         this.ResetUI();
         if (!IsNull)
         {

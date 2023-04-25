@@ -6,9 +6,4 @@ using UnityEngine;
 public class UIWaitPopup : UIPopup
 {
 
-    public override void Open()
-    {
-        this.gameObject.SetActive(true);
-    }
-
 }

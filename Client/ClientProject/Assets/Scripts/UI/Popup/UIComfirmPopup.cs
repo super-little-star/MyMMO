@@ -12,9 +12,9 @@ public class UIComfirmPopup : UIPopup
     public Button Btn_Comfirm;
     public Button Btn_Cancel;
 
-    public override void Open()
+    public override void Open(bool useAnimation)
     {
-        base.Open();
+        base.Open(useAnimation);
         if (Btn_Comfirm != null) Btn_Comfirm.onClick.AddListener(this.Hide);
         if (Btn_Cancel != null) Btn_Cancel.onClick.AddListener(this.Hide);
     }

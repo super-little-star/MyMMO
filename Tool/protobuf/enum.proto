@@ -15,10 +15,9 @@ enum RESULT {
 
 // 职业
 enum CharacterClass {
-    None = 0;
-    Warrior = 1; // 战士
-    Hunter = 2; // 猎人
-    Sorcerer = 3; // 法师
+    Warrior = 0; // 战士
+    Hunter = 1; // 猎人
+    Sorcerer = 2; // 法师
 }
 
 enum CharacterType {

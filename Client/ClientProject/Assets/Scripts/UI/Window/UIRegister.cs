@@ -34,9 +34,9 @@ public class UIRegister : UIWindow
         }
     }
 
-    public override void Open()
+    public override void Open(bool useAnimation)
     {
-        base.Open();
+        base.Open(useAnimation);
         if (Btn_Register != null) Btn_Register.onClick.AddListener(OnRegisterClick);
     }
 

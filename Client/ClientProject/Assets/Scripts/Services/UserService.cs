@@ -16,13 +16,13 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
     {
         UserManager.Instance.Init();
         MessageHandOut.Instance.Login<RegisterResponse>(OnUserRegister);
-        MessageHandOut.Instance.Login<LoginResponse>(OnUserRegister);
+        MessageHandOut.Instance.Login<LoginResponse>(OnUserLogin);
     }
 
     public void Dispose()
     {
         MessageHandOut.Instance.Logout<RegisterResponse>(OnUserRegister);
-        MessageHandOut.Instance.Logout<LoginResponse>(OnUserRegister);
+        MessageHandOut.Instance.Logout<LoginResponse>(OnUserLogin);
     }
 
     #region Register
