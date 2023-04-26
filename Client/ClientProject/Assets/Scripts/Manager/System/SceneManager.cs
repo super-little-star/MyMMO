@@ -19,7 +19,7 @@ public class SceneManager : MonoSingleton<SceneManager>
 
         UILoading ui = UIManager.Instance.Loading();
 
-        AsyncOperation async = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName); ;
+        AsyncOperation async = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
         async.allowSceneActivation = true;
 
         while(!async.isDone)
@@ -33,5 +33,15 @@ public class SceneManager : MonoSingleton<SceneManager>
 
     }
 
+    public void LoadSelectCharacter()
+    {
+        UIManager.Instance.Loading();
+
+        UIManager.Instance.KillAll();
+        UIManager.Instance.Open<UICreatCharacter>(false);
+        UIManager.Instance.Open<UISelectCharacter>(false);
+
+        StartCoroutine(Load("SelectCharacter"));
+    }
 
 }

@@ -48,7 +48,8 @@ public class UserManager : Singleton<UserManager>, IDisposable
         switch(response.Result)
         {
             case Result.Success:
-                UIManager.Instance.InfoPopup(UIPopup.Level.Normal, "µÇÂ¼³É¹¦");
+                User.Instance.SetUser(response.User);
+                SceneManager.Instance.LoadSelectCharacter();
                 break;
             case Result.Failed:
                 UIManager.Instance.InfoPopup(UIPopup.Level.Error,ProtoErr2string.Convert(response.Error)); ;

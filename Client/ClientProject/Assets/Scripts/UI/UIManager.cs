@@ -30,8 +30,12 @@ public class UIManager : MonoSingleton<UIManager>
         this.UIChackIn<UILogin>("UI/Window/UILogin", false);
         this.UIChackIn<UIRegister>("UI/Window/UIRegister", false);
 
+        this.UIChackIn<UISelectCharacter>("UI/SelectCharacter/UISelectCharacter", true);
+        this.UIChackIn<UICreatCharacter>("UI/SelectCharacter/UICreatCharacter", true);
+
         this.UIChackIn<UIBackground>("UI/UIBackground", false);
         this.UIChackIn<UILoading>("UI/UILoading", false);
+
     }
 
     /// <summary>
@@ -96,11 +100,28 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
 
+    /// <summary>
+    /// 卸载UI
+    /// </summary>
+    /// <param name="type"></param>
+    public void Kill(Type type)
+    {
+        UIData data;
+        if(this.UIPreforms.TryGetValue(type, out data))
+        {
+            if (data.Instance == null) return;
+            data.Instance.Close();
+        }
+    }
+
+    /// <summary>
+    /// 把所有打开的UI全部卸载掉
+    /// </summary>
     public void KillAll()
     {
-        for (int i = 0; i < this.transform.childCount; i++)
+        for (int i = 0; i < UIRoot.childCount; i++)
         {
-            Transform child = this.transform.GetChild(i);
+            Transform child = UIRoot.GetChild(i);
             UIBase ui = child.GetComponent<UIBase>();
             if (ui != null)  ui.Close();
         }
@@ -161,9 +182,7 @@ public class UIManager : MonoSingleton<UIManager>
 
     public UILoading Loading()
     {
-
         return Open<UILoading>(false,this.transform);
-        
     }
 
 }
