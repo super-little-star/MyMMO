@@ -23,3 +23,8 @@ message LoginResponse {
     PUser user = 3;
 }
 
+message CreateCharacterResponse {
+    RESULT result = 1;
+    Error error = 2;
+    repeated PCharacter characters = 3;
+}

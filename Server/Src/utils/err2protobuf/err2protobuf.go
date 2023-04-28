@@ -15,13 +15,13 @@ import (
 func Convert(err error) ProtoMessage.Error {
 	switch err {
 	case DB.ErrUserNotExist: // 用户不存在
-		return ProtoMessage.Error_UserNotExist
+		return ProtoMessage.Error_LoginUserNotExist
 	case DB.ErrUserNameExist: // 用户名已存在
-		return ProtoMessage.Error_UserNameExist
+		return ProtoMessage.Error_RegisterUserNameExist
 	case manager.ErrPasswordNotMatch: // 密码不正确
-		return ProtoMessage.Error_PasswordNotMatch
+		return ProtoMessage.Error_LoginPasswordNotMatch
 	case network.ErrUserIsOnline:
-		return ProtoMessage.Error_UserIsOnline
+		return ProtoMessage.Error_LoginUserIsOnline
 	default:
 		return ProtoMessage.Error_None
 	}

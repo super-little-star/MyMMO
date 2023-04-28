@@ -10,10 +10,10 @@ public class ProtoErr2string
     {
         switch (err)
         {
-            case ProtoMessage.Error.UserNameExist:return "用户名已存在";
-            case ProtoMessage.Error.UserNotExist:return "用户不存在";
-            case ProtoMessage.Error.PasswordNotMatch:return "密码不正确";
-            case ProtoMessage.Error.UserIsOnline:return "用户正在游戏中";
+            case ProtoMessage.Error.RegisterUserNameExist:return "用户名已存在";
+            case ProtoMessage.Error.LoginUserNotExist:return "用户不存在";
+            case ProtoMessage.Error.LoginPasswordNotMatch:return "密码不正确";
+            case ProtoMessage.Error.LoginUserIsOnline:return "用户正在游戏中";
             default:
                 return string.Empty;
         }

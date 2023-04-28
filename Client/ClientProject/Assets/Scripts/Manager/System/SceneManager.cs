@@ -38,7 +38,7 @@ public class SceneManager : MonoSingleton<SceneManager>
         UIManager.Instance.Loading();
 
         UIManager.Instance.KillAll();
-        UIManager.Instance.Open<UICreatCharacter>(false);
+        UIManager.Instance.Open<UICreateCharacter>(false);
         UIManager.Instance.Open<UISelectCharacter>(false);
 
         StartCoroutine(Load("SelectCharacter"));

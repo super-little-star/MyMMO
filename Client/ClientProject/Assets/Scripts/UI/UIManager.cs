@@ -31,7 +31,7 @@ public class UIManager : MonoSingleton<UIManager>
         this.UIChackIn<UIRegister>("UI/Window/UIRegister", false);
 
         this.UIChackIn<UISelectCharacter>("UI/SelectCharacter/UISelectCharacter", true);
-        this.UIChackIn<UICreatCharacter>("UI/SelectCharacter/UICreatCharacter", true);
+        this.UIChackIn<UICreateCharacter>("UI/SelectCharacter/UICreatCharacter", true);
 
         this.UIChackIn<UIBackground>("UI/UIBackground", false);
         this.UIChackIn<UILoading>("UI/UILoading", false);

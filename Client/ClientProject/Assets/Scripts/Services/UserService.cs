@@ -81,4 +81,24 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
         this.OnLoginCallback?.Invoke(response);
     }
     #endregion
+
+    #region CreateCharacter
+    public void SendCreateCharacter(int characterClass , string name)
+    {
+        Debug.Log("SendCreateCharacter:: Class[{0}] , Name[{1}]");
+        NetMessage msg = new()
+        {
+            Request = new()
+            {
+                CreateCharacter = new()
+                {
+                    Name = name,
+                    characterClass = (ProtoMessage.CharacterClass)characterClass
+                }
+            }
+        };
+
+        NetSerice.Instance.Send(msg);
+    }
+    #endregion
 }

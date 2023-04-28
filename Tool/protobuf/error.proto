@@ -11,8 +11,8 @@ package ProtoMessage;
 ////////////////////////////////////////////////////////////////
 enum Error {
     None = 0;
-    UserNameExist = 1;
-    UserNotExist = 2;
-    PasswordNotMatch = 3;
-    UserIsOnline = 4;
+    RegisterUserNameExist = 1;
+    LoginUserNotExist = 2;
+    LoginPasswordNotMatch = 3;
+    LoginUserIsOnline = 4;
 }
