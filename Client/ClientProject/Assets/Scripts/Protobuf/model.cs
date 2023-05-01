@@ -44,6 +44,9 @@ namespace ProtoMessage
         [global::ProtoBuf.ProtoMember(5)]
         public CharacterType Type { get; set; }
 
+        [global::ProtoBuf.ProtoMember(6)]
+        public int Level { get; set; }
+
     }
 
 }

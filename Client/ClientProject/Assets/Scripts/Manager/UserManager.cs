@@ -30,7 +30,7 @@ public class UserManager : Singleton<UserManager>, IDisposable
                 });
                 break;
             case Result.Failed:
-                if(error == Error.UserNameExist)
+                if(error == Error.RegisterUserNameExist)
                 {
                     UIInfoPopup p = UIManager.Instance.InfoPopup(UIPopup.Level.Error, "用户名已存在");
                     p.AddComfirmEvent(() =>

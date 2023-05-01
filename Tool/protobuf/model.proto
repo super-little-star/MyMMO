@@ -15,4 +15,5 @@ message PCharacter {
     string Name = 3;
     CharacterClass Class = 4;
     CharacterType Type = 5;
+    int32 Level = 6;
 }

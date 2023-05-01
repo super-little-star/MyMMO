@@ -12,6 +12,7 @@ public abstract class UIBase : MonoBehaviour
     /// <param name="useAnimation">是否使用动画</param>
     public virtual void Open(bool useAnimation)
     {
+        this.transform.SetAsLastSibling();
         if (transform.gameObject.activeSelf == true) return;
         this.transform.gameObject.SetActive(true);
         if(useAnimation)

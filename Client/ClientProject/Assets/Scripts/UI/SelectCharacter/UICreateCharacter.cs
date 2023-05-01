@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class UICreateCharacter : UIBase
 {
     //字母中文开头，允许5-16字节，允许中文英文数字
-    public string CharacterNameRegular = @"^[\u4e00-\u9fa5_a-zA-Z][\u4e00-\u9fa5_-zA-Z0-9]{4,16}$";
+    private string CharacterNameRegular = @"^[\u4e00-\u9fa5_a-zA-Z][\u4e00-\u9fa5_-zA-Z0-9]{4,16}$";
 
     public InputField IF_UserName;
 
@@ -39,6 +39,22 @@ public class UICreateCharacter : UIBase
     {
         base.Open(useAnimation);
         this.CurrCharacterClass = 0;
+        Btn_Create.onClick.AddListener(OnClickeCreate);
+        Btn_Break.onClick.AddListener(OnClickBreak);
+    }
+
+    public override void Hide()
+    {
+        base.Hide();
+        Btn_Create.onClick.RemoveAllListeners();
+        Btn_Break.onClick.RemoveAllListeners();
+    }
+
+    public override void Close()
+    {
+        base.Close();
+        Btn_Create.onClick.RemoveAllListeners();
+        Btn_Break.onClick.RemoveAllListeners();
     }
 
     private void OnClassChange()
@@ -71,5 +87,11 @@ public class UICreateCharacter : UIBase
         }
 
         UserSerice.Instance.SendCreateCharacter(currCharacterClass,IF_UserName.text);
+    }
+
+    private void OnClickBreak()
+    {
+        UIManager.Instance.Close(typeof(UICreateCharacter));
+        UIManager.Instance.Open<UISelectCharacter>(false);
     }
 }
