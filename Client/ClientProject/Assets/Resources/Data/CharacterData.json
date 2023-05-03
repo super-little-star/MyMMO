@@ -1,6 +1,6 @@
 {
-  "1": {
-    "ID": 1,
+  "0": {
+    "ID": 0,
     "Class": "WARRIOR",
     "Name": "战士",
     "Resource": "",
@@ -18,8 +18,8 @@
     "GrowthDEX": 1.5,
     "BaseCrit": 0.3
   },
-  "2": {
-    "ID": 2,
+  "1": {
+    "ID": 1,
     "Class": "HUNTER",
     "Name": "猎人",
     "Resource": "",
@@ -37,8 +37,8 @@
     "GrowthDEX": 2,
     "BaseCrit": 0.6
   },
-  "3": {
-    "ID": 3,
+  "2": {
+    "ID": 2,
     "Class": "SORCERE",
     "Name": "法师",
     "Resource": "",
