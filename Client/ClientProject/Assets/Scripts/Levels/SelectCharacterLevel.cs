@@ -18,18 +18,15 @@ public class SelectCharacterLevel : MonoBehaviour
         CameraManager.Instance.Main.transform.position = this.cameraPos.position;
         CameraManager.Instance.Main.transform.rotation = this.cameraPos.rotation;
         CameraManager.Instance.Main.targetTexture = CameraTexture;
+        CameraManager.Instance.Main.clearFlags = CameraClearFlags.SolidColor;
 
-        UICreateCharacter create = UIManager.Instance.Open<UICreateCharacter>(false);
-        UISelectCharacter select = UIManager.Instance.Open<UISelectCharacter>(false);
+        UICreateCharacter create = UIManager.Instance.GetUI<UICreateCharacter>();
+        UISelectCharacter select = UIManager.Instance.GetUI<UISelectCharacter>();
 
         create.OnCurrClassChange += OnCurrClassChange;
         select.OnCurrClassChange += OnCurrClassChange;
     }
 
-    private void OnDestroy()
-    {
-        CameraManager.Instance.Main.targetTexture = null;
-    }
 
     void OnCurrClassChange(int characterClass)
     {

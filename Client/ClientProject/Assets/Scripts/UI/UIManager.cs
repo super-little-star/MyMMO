@@ -31,7 +31,7 @@ public class UIManager : MonoSingleton<UIManager>
         this.UIChackIn<UIRegister>("UI/Window/UIRegister", false);
 
         this.UIChackIn<UISelectCharacter>("UI/SelectCharacter/UISelectCharacter", true);
-        this.UIChackIn<UICreateCharacter>("UI/SelectCharacter/UICreatCharacter", true);
+        this.UIChackIn<UICreateCharacter>("UI/SelectCharacter/UICreateCharacter", true);
 
         this.UIChackIn<UIBackground>("UI/UIBackground", false);
         this.UIChackIn<UILoading>("UI/UILoading", false);
@@ -47,6 +47,17 @@ public class UIManager : MonoSingleton<UIManager>
     private void UIChackIn<T>(string resoutces, bool isReusable) where T : UIBase
     {
         this.UIPreforms.Add(typeof(T), new UIData() { Resources = resoutces, IsReusable = isReusable });
+    }
+
+    public T GetUI<T>() where T : UIBase
+    {
+        Type type = typeof(T);
+        UIData data;
+        if(this.UIPreforms.TryGetValue(type, out data))
+        {
+            return (T)data.Instance;
+        }
+        return default;
     }
 
     /// <summary>
@@ -119,11 +130,11 @@ public class UIManager : MonoSingleton<UIManager>
     /// </summary>
     public void KillAll()
     {
-        for (int i = 0; i < UIRoot.childCount; i++)
+        foreach( var v in this.UIPreforms)
         {
-            Transform child = UIRoot.GetChild(i);
-            UIBase ui = child.GetComponent<UIBase>();
-            if (ui != null)  ui.Close();
+            if (v.Key == typeof(UILoading)) continue;
+
+            if(v.Value.Instance != null) v.Value.Instance.Close();
         }
     }
 

@@ -22,6 +22,8 @@ public class UICreateCharacter : UIBase
     public Text T_CurrClassName;
     public Text T_CurrClassDes;
 
+    public Toggle[] Tg_Class; 
+
     public UnityAction<int> OnCurrClassChange;
 
     private int currCharacterClass;
@@ -37,24 +39,20 @@ public class UICreateCharacter : UIBase
 
     public override void Open(bool useAnimation)
     {
+        
         base.Open(useAnimation);
+        ResetUI();
+        Tg_Class[0].isOn = true;
+    }
+
+    public void ResetUI()
+    {
+        if(IF_UserName!=null) IF_UserName.text = string.Empty;
         this.CurrCharacterClass = 0;
+        Btn_Create.onClick.RemoveAllListeners();
+        Btn_Break.onClick.RemoveAllListeners();
         Btn_Create.onClick.AddListener(OnClickeCreate);
         Btn_Break.onClick.AddListener(OnClickBreak);
-    }
-
-    public override void Hide()
-    {
-        base.Hide();
-        Btn_Create.onClick.RemoveAllListeners();
-        Btn_Break.onClick.RemoveAllListeners();
-    }
-
-    public override void Close()
-    {
-        base.Close();
-        Btn_Create.onClick.RemoveAllListeners();
-        Btn_Break.onClick.RemoveAllListeners();
     }
 
     private void OnClassChange()

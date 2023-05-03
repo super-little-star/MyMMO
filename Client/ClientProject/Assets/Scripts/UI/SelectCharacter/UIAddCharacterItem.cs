@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIAddCharacterItem : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Button Btn_Add;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        if(Btn_Add != null)
+        {
+            Btn_Add.onClick.AddListener(() =>
+            {
+                UIManager.Instance.Close(typeof(UISelectCharacter));
+                UIManager.Instance.Open<UICreateCharacter>(false);
+            });
+        }
     }
 }

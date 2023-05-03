@@ -10,11 +10,13 @@ public class UserManager : Singleton<UserManager>, IDisposable
     {
         UserSerice.Instance.OnRegisterCallback += OnRegisterCallback;
         UserSerice.Instance.OnLoginCallback += OnLoginCallback;
+        UserSerice.Instance.OnCreateCharacterCallback += OnCreateCharacterCallback;
     }
     public void Dispose()
     {
         UserSerice.Instance.OnRegisterCallback -= OnRegisterCallback;
         UserSerice.Instance.OnLoginCallback -= OnLoginCallback;
+        UserSerice.Instance.OnCreateCharacterCallback -= OnCreateCharacterCallback;
     }
 
     private void OnRegisterCallback(Result result,Error error)
@@ -57,4 +59,21 @@ public class UserManager : Singleton<UserManager>, IDisposable
         }
     }
 
+    private void OnCreateCharacterCallback(CreateCharacterResponse response)
+    {
+        switch(response.Result)
+        {
+            case Result.Success:
+                User.Instance.SetCharacters(response.Characters);
+                UIManager.Instance.InfoPopup(UIPopup.Level.Normal, "创建角色成功").AddComfirmEvent(() =>
+                {
+                    UIManager.Instance.Open<UISelectCharacter>(false);
+                    UIManager.Instance.Close(typeof(UICreateCharacter));
+                });
+                break;
+            case Result.Failed:
+                UIManager.Instance.InfoPopup(UIPopup.Level.Error, ProtoErr2string.Convert(response.Error));
+                break;
+        }
+    }
 }

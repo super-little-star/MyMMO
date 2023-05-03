@@ -11,18 +11,22 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
 {
     public UnityAction<Result, ProtoMessage.Error> OnRegisterCallback;
     public UnityAction<LoginResponse> OnLoginCallback;
+    public UnityAction<CreateCharacterResponse> OnCreateCharacterCallback;
 
     public void Init()
     {
         UserManager.Instance.Init();
         MessageHandOut.Instance.Login<RegisterResponse>(OnUserRegister);
         MessageHandOut.Instance.Login<LoginResponse>(OnUserLogin);
+        MessageHandOut.Instance.Login<CreateCharacterResponse>(OnCreateCharacter);
     }
 
     public void Dispose()
     {
         MessageHandOut.Instance.Logout<RegisterResponse>(OnUserRegister);
         MessageHandOut.Instance.Logout<LoginResponse>(OnUserLogin);
+        MessageHandOut.Instance.Logout<CreateCharacterResponse>(OnCreateCharacter);
+
     }
 
     #region Register
@@ -85,7 +89,7 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
     #region CreateCharacter
     public void SendCreateCharacter(int characterClass , string name)
     {
-        Debug.Log("SendCreateCharacter:: Class[{0}] , Name[{1}]");
+        Debug.LogFormat("SendCreateCharacter:: Class[{0}] , Name[{1}]",characterClass,name);
         NetMessage msg = new()
         {
             Request = new()
@@ -99,6 +103,14 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
         };
 
         NetSerice.Instance.Send(msg);
+    }
+
+    private void OnCreateCharacter(object message)
+    {
+        CreateCharacterResponse response = (CreateCharacterResponse)message;
+        Debug.LogFormat("OnCreateCharacter:: Result[{0}] , Error[{1}], Character[{2}]", response.Result, response.Error, response.Characters);
+
+        this.OnCreateCharacterCallback?.Invoke(response);
     }
     #endregion
 }

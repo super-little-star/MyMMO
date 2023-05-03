@@ -14,6 +14,7 @@ public class ProtoErr2string
             case ProtoMessage.Error.LoginUserNotExist:return "用户不存在";
             case ProtoMessage.Error.LoginPasswordNotMatch:return "密码不正确";
             case ProtoMessage.Error.LoginUserIsOnline:return "用户正在游戏中";
+            case ProtoMessage.Error.CreateCharacterNameExist:return "角色名已存在";
             default:
                 return string.Empty;
         }

@@ -5165,7 +5165,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcd4cafdf07ef87499e06530047231bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CharacterNameRegular: ^[\u4e00-\u9fa5_a-zA-Z][\u4e00-\u9fa5_-zA-Z0-9]{4,16}$
   IF_UserName: {fileID: 7998704548092778827}
   TG_Class: {fileID: 7998704547654087012}
   RI_Characterimg: {fileID: 876867434}
@@ -5173,6 +5172,10 @@ MonoBehaviour:
   Btn_Break: {fileID: 8599019583649268460}
   T_CurrClassName: {fileID: 7998704547553596085}
   T_CurrClassDes: {fileID: 7998704547900323845}
+  Tg_Class:
+  - {fileID: 7998704548366329899}
+  - {fileID: 7998704548557534494}
+  - {fileID: 7998704548033452285}
 --- !u!1 &7998704548541135691
 GameObject:
   m_ObjectHideFlags: 0
