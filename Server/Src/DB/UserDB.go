@@ -5,12 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"mmo_server/DB/Model"
-	"mmo_server/utils/mlog"
 )
 
 var (
-	ErrUserNameExist = errors.New("DB :: UserName is Exist") // 错误：用户名已存在
-	ErrUserNotExist  = errors.New("DB :: User is not Exist") // 错误：用户不存在
+	ErrUserNameExist      = errors.New("DB :: UserName is Exist")       // 错误：用户名已存在
+	ErrUserNotExist       = errors.New("DB :: User is not Exist")       // 错误：用户不存在
+	ErrCharacterNameExist = errors.New("DB :: Character Name is Exist") // 错误：角色名已存在
 )
 
 // Register
@@ -31,7 +31,7 @@ func Register(uid int64, userName string, psw string, rt int64) error {
 		_ = tx.Rollback()
 	}()
 	if err != nil {
-		mlog.Error.Println("Transaction begin is error: %v", err)
+		return err
 	}
 
 	s := "SELECT userName FROM DBUser WHERE userName = ? LIMIT 1"
@@ -51,7 +51,7 @@ func Register(uid int64, userName string, psw string, rt int64) error {
 				}
 
 				if err := tx.Commit(); err != nil {
-					mlog.Error.Println("SQL Commit error:%v", err)
+					return err
 				}
 				return nil
 			}
@@ -60,7 +60,7 @@ func Register(uid int64, userName string, psw string, rt int64) error {
 		}
 	}
 	if err := tx.Commit(); err != nil {
-		mlog.Error.Println("SQL Commit error:%v", err)
+		return err
 	}
 	return ErrUserNameExist
 }
@@ -72,10 +72,10 @@ func Register(uid int64, userName string, psw string, rt int64) error {
 //	@return *Model.DbUser
 //	@return error
 func GetDbUser(userName string) (*Model.DbUser, error) {
-	s := "SELECT UID,Password,CharacterCount,RegisterTime FROM DBUser WHERE userName = ? LIMIT 1"
+	s := "SELECT UID,Password,RegisterTime FROM DBUser WHERE userName = ? LIMIT 1"
 	row := dB.QueryRow(s, userName)
 	user := &Model.DbUser{}
-	if err := row.Scan(&user.UID, &user.Password, &user.CharacterCount, &user.RegisterTime); err != nil {
+	if err := row.Scan(&user.UID, &user.Password, &user.RegisterTime); err != nil {
 		switch err {
 		case sql.ErrNoRows:
 			return nil, ErrUserNotExist
@@ -93,14 +93,12 @@ func GetDbUser(userName string) (*Model.DbUser, error) {
 //	@Description: 获取角色列表
 //	@param user
 //	@return error
-func GetCharacters(user *Model.DbUser) error {
+func GetCharacters(uid int64) ([]*Model.DbCharacter, error) {
 
 	var characters []*Model.DbCharacter
-	if user.CharacterCount == 0 {
-		return nil
-	}
-	str := "SELECT ID,UserID,Name,Class From DbCharacter WHERE UserID = ?"
-	rows, err := dB.Query(str, user.UID)
+
+	str := "SELECT ID,UserID,Name,Class,Level From DbCharacter WHERE UserID = ?"
+	rows, err := dB.Query(str, uid)
 	defer func() {
 		if err := rows.Close(); err != nil {
 			fmt.Printf("rows close is error:%s", err)
@@ -110,20 +108,60 @@ func GetCharacters(user *Model.DbUser) error {
 	if err != nil {
 		switch err {
 		case sql.ErrNoRows:
-			return nil
+			return characters, nil
 		default:
-			return err
+			return nil, err
 		}
 	}
 
 	for rows.Next() {
 		c := &Model.DbCharacter{}
-		if err := rows.Scan(&c.ID, &c.UserID, &c.Name, &c.Class); err != nil {
-			return err
+		if err := rows.Scan(&c.ID, &c.UserID, &c.Name, &c.Class, &c.Level); err != nil {
+			return nil, err
 		}
 		characters = append(characters, c)
 	}
-	user.Characters = characters
 
-	return nil
+	return characters, nil
+}
+
+func CreateCharacter(uid int64, name string, class int, createTime int64) error {
+	if _, err := dB.Exec("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE"); err != nil {
+		return err
+	}
+	tx, err := dB.Begin()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		_ = tx.Rollback()
+	}()
+
+	s := "SELECT name FROM DbCharacter WHERE name = ? LIMIT 1"
+	row := tx.QueryRow(s, name)
+	var temp string
+	err = row.Scan(&temp)
+	if err != nil {
+		switch err {
+		case sql.ErrNoRows:
+			{
+				i := "INSERT INTO DbCharacter(userId,Name,Class,CreateTime) VALUES (?,?,?,?)"
+				_, err = tx.Exec(i, uid, name, class, createTime)
+				if err != nil {
+					return err
+				}
+				if err := tx.Commit(); err != nil {
+					return err
+				}
+				return nil
+			}
+		default:
+			return err
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+	return ErrCharacterNameExist
 }

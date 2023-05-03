@@ -48,6 +48,9 @@ func (mh *GMessageHandOut) HandOutRequest(sender *GConnection, request *ProtoMes
 	if request.Login != nil {
 		mh.triggerEvents(sender, request.Login)
 	}
+	if request.CreateCharacter != nil {
+		mh.triggerEvents(sender, request.CreateCharacter)
+	}
 
 }
 

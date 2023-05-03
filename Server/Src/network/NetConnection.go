@@ -143,19 +143,18 @@ func (c *GConnection) Session() *GSession {
 	return nil
 }
 
-//
 // SendResponse
-//  @Description:
-//  @receiver c
 //
+//	@Description:
+//	@receiver c
 func (c *GConnection) SendResponse() {
-	if c.session.response == nil {
+	if c.session.NetMsg == nil {
 		mlog.Warning.Printf("Conn[%v] Response is nil", c.conn.RemoteAddr())
 		return
 	}
-	data := PackMessage(c.session.response)
+	data := PackMessage(c.session.NetMsg)
 	if data != nil {
 		c.chanSendData <- data
 	}
-	c.session.response = nil
+	c.session.NetMsg = nil
 }

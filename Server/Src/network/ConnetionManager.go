@@ -14,7 +14,7 @@ var connectionManager IConnectionManager
 type IConnectionManager interface {
 	Init()
 
-	AddUser(uid int64, user *Model.DbUser) error
+	AddUser(user *Model.DbUser) error
 	RemoveUser(uid int64)
 
 	GetConn(characterId int) *GConnection
@@ -40,11 +40,11 @@ func (cm *GConnectionManager) Init() {
 	cm.Users = make(map[int64]*Model.DbUser)
 }
 
-func (cm *GConnectionManager) AddUser(uid int64, user *Model.DbUser) error {
-	if _, ok := cm.Users[uid]; ok {
+func (cm *GConnectionManager) AddUser(user *Model.DbUser) error {
+	if _, ok := cm.Users[user.UID]; ok {
 		return ErrUserIsOnline
 	} else {
-		cm.Users[uid] = user
+		cm.Users[user.UID] = user
 		return nil
 	}
 }

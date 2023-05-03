@@ -31,10 +31,12 @@ func (g *GUserService) Start() {
 	g.manager = manager.NewUserManager()
 	network.LoginEvent[*ProtoMessage.RegisterRequest](g.OnUserRegister)
 	network.LoginEvent[*ProtoMessage.LoginRequest](g.OnUserLogin)
+	network.LoginEvent[*ProtoMessage.CreateCharacterRequest](g.OnCreateCharacter)
 }
 func (g *GUserService) Stop() {
 	network.LogoffEvent[*ProtoMessage.RegisterRequest]()
 	network.LogoffEvent[*ProtoMessage.LoginRequest]()
+	network.LogoffEvent[*ProtoMessage.CreateCharacterRequest]()
 }
 
 // OnUserRegister
@@ -101,7 +103,7 @@ func (g *GUserService) OnUserLogin(sender *network.GConnection, msg interface{})
 	}
 
 	// 是否已经存在该User的链接
-	if err := network.ConnectionManager().AddUser(dbUser.UID, dbUser); err != nil {
+	if err := network.ConnectionManager().AddUser(dbUser); err != nil {
 		newMsg.Response.Login.Result = ProtoMessage.RESULT_FAILED
 		newMsg.Response.Login.Error = err2protobuf.Convert(err)
 		sender.SendMsg(newMsg)
@@ -119,8 +121,8 @@ func (g *GUserService) OnUserLogin(sender *network.GConnection, msg interface{})
 		netCharacter := &ProtoMessage.PCharacter{
 			Id:    c.ID,
 			Name:  c.Name,
-			Class: interface{}(c.Class).(ProtoMessage.CharacterClass),
-			Type:  ProtoMessage.CharacterType_Player,
+			Class: ProtoMessage.CharacterClass(c.Class),
+			Level: c.Level,
 		}
 		newMsg.Response.Login.User.Characters = append(newMsg.Response.Login.User.Characters, netCharacter)
 	}
@@ -129,4 +131,47 @@ func (g *GUserService) OnUserLogin(sender *network.GConnection, msg interface{})
 	newMsg.Response.Login.Error = ProtoMessage.Error_None
 
 	sender.SendMsg(newMsg)
+}
+
+func (g *GUserService) OnCreateCharacter(sender *network.GConnection, msg interface{}) {
+	request, ok := msg.(*ProtoMessage.CreateCharacterRequest)
+	if !ok {
+		mlog.Warning.Println("Message[CreateCharacterRequest]强转失败")
+		return
+	}
+
+	mlog.Info.Printf("OnCreateCharacter:: Name[%v] Class[%v]", request.Name, request.CharacterClass)
+
+	newCharacters, err := g.manager.CreateCharacter(
+		sender.Session().User.UID,
+		request.Name,
+		int(request.CharacterClass),
+	)
+
+	sender.Session().User.Characters = newCharacters
+
+	sender.Session().GetNetResponse().CreateCharacter = &ProtoMessage.CreateCharacterResponse{}
+
+	if err != nil {
+		sender.Session().GetNetResponse().CreateCharacter.Result = ProtoMessage.RESULT_FAILED
+		sender.Session().GetNetResponse().CreateCharacter.Error = err2protobuf.Convert(err)
+		sender.SendResponse()
+		return
+	}
+
+	sender.Session().GetNetResponse().CreateCharacter.Result = ProtoMessage.RESULT_SUCCESS
+	var netCharacters []*ProtoMessage.PCharacter
+	for _, c := range newCharacters {
+		netChar := &ProtoMessage.PCharacter{
+			Id:    c.ID,
+			Name:  c.Name,
+			Class: ProtoMessage.CharacterClass(c.Class),
+			Level: c.Level,
+		}
+		netCharacters = append(netCharacters, netChar)
+	}
+
+	sender.Session().GetNetResponse().CreateCharacter.Characters = netCharacters
+	sender.SendResponse()
+
 }
