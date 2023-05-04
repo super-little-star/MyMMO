@@ -11,12 +11,14 @@ public class UserManager : Singleton<UserManager>, IDisposable
         UserSerice.Instance.OnRegisterCallback += OnRegisterCallback;
         UserSerice.Instance.OnLoginCallback += OnLoginCallback;
         UserSerice.Instance.OnCreateCharacterCallback += OnCreateCharacterCallback;
+        UserSerice.Instance.OnDeleteCharacterCallback += OnDeleteCharacterCallback;
     }
     public void Dispose()
     {
         UserSerice.Instance.OnRegisterCallback -= OnRegisterCallback;
         UserSerice.Instance.OnLoginCallback -= OnLoginCallback;
         UserSerice.Instance.OnCreateCharacterCallback -= OnCreateCharacterCallback;
+        UserSerice.Instance.OnDeleteCharacterCallback -= OnDeleteCharacterCallback;
     }
 
     private void OnRegisterCallback(Result result,Error error)
@@ -73,6 +75,24 @@ public class UserManager : Singleton<UserManager>, IDisposable
                 break;
             case Result.Failed:
                 UIManager.Instance.InfoPopup(UIPopup.Level.Error, ProtoErr2string.Convert(response.Error));
+                break;
+        }
+    }
+
+    private void OnDeleteCharacterCallback(DeleteCharacterResponse response)
+    {
+        switch(response.Result)
+        {
+            case Result.Success:
+                User.Instance.SetCharacters(response.Characters);
+                UIManager.Instance.InfoPopup(UIPopup.Level.Normal, "½ÇÉ«É¾³ý³É¹¦").AddComfirmEvent(() =>
+                {
+                    UIManager.Instance.Open<UISelectCharacter>(false);
+                    UIManager.Instance.Close(typeof(UICreateCharacter));
+                });
+                break;
+            case Result.Failed:
+                UIManager.Instance.InfoPopup(UIPopup.Level.Error,ProtoErr2string.Convert(response.Error));
                 break;
         }
     }

@@ -40,6 +40,9 @@ namespace ProtoMessage
         [global::ProtoBuf.ProtoMember(3)]
         public CreateCharacterRequest CreateCharacter { get; set; }
 
+        [global::ProtoBuf.ProtoMember(4)]
+        public DeleteCharacterRequest DeleteCharacter { get; set; }
+
     }
 
     [global::ProtoBuf.ProtoContract()]
@@ -57,6 +60,9 @@ namespace ProtoMessage
 
         [global::ProtoBuf.ProtoMember(3)]
         public CreateCharacterResponse CreateCharacter { get; set; }
+
+        [global::ProtoBuf.ProtoMember(4)]
+        public DeleteCharacterResponse DeleteCharacter { get; set; }
 
     }
 

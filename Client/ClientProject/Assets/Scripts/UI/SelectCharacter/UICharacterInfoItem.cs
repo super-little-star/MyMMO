@@ -33,6 +33,8 @@ public class UICharacterInfoItem : MonoBehaviour
 
     public Toggle toggle;
 
+    
+
     private void OnInfoChange()
     {
         if (IsNull()) return;
@@ -42,6 +44,14 @@ public class UICharacterInfoItem : MonoBehaviour
         this.T_Info.text = string.Format("{0} | Lv.{1}", DataManager.Instance.Characters[(int)this.info.Class].Name, info.Level);
 
         // TODO 添加按钮事件
+        Btn_Delect.onClick.RemoveAllListeners();
+        Btn_Delect.onClick.AddListener(() =>
+        {
+            if(this.Info != null)
+            {
+                UserSerice.Instance.SendDeleteCharacter(this.info.Id);
+            }
+        });
     }
 
     private bool IsNull()
