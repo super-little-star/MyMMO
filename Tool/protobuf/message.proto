@@ -21,12 +21,14 @@ message NetMessageRequest{
     RegisterRequest Register = 1;
     LoginRequest Login = 2;
     CreateCharacterRequest CreateCharacter = 3;
+    DeleteCharacterRequest DeleteCharacter = 4;
 }
 
 message NetMessageResponse{
     RegisterResponse Register = 1;
     LoginResponse Login = 2;
     CreateCharacterResponse CreateCharacter = 3;
+    DeleteCharacterResponse DeleteCharacter = 4;
 }
 
 

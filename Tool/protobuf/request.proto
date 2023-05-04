@@ -24,3 +24,7 @@ message CreateCharacterRequest {
     string name = 1;
     CharacterClass characterClass = 2;
 }
+
+message DeleteCharacterRequest {
+    int32 characterId = 1;
+}

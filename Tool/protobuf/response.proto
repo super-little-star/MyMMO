@@ -28,3 +28,9 @@ message CreateCharacterResponse {
     Error error = 2;
     repeated PCharacter characters = 3;
 }
+
+message DeleteCharacterResponse {
+    RESULT result = 1;
+    Error error = 2;
+    repeated PCharacter characters = 3;
+}
