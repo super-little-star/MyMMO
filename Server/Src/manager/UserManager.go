@@ -15,6 +15,7 @@ type IUserManager interface {
 	UserRegister(userName string, psw string) error
 	UserLogin(userName string, psw string) (*Model.DbUser, error)
 	CreateCharacter(uid int64, name string, class int) ([]*Model.DbCharacter, error)
+	DeleteCharacter(uid int64, characterId int32) ([]*Model.DbCharacter, error)
 }
 
 type GUserManager struct {
@@ -73,6 +74,14 @@ func (u *GUserManager) UserLogin(userName string, psw string) (*Model.DbUser, er
 
 func (u *GUserManager) CreateCharacter(uid int64, name string, class int) ([]*Model.DbCharacter, error) {
 	if err := DB.CreateCharacter(uid, name, class, time.Now().Unix()); err != nil {
+		return nil, err
+	}
+
+	return DB.GetCharacters(uid)
+}
+
+func (u *GUserManager) DeleteCharacter(uid int64, characterId int32) ([]*Model.DbCharacter, error) {
+	if err := DB.DeleteCharacter(uid, characterId); err != nil {
 		return nil, err
 	}
 

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"mmo_server/DB/Model"
 	"mmo_server/ProtoMessage"
 	"mmo_server/manager"
 	"mmo_server/network"
@@ -32,11 +33,33 @@ func (g *GUserService) Start() {
 	network.LoginEvent[*ProtoMessage.RegisterRequest](g.OnUserRegister)
 	network.LoginEvent[*ProtoMessage.LoginRequest](g.OnUserLogin)
 	network.LoginEvent[*ProtoMessage.CreateCharacterRequest](g.OnCreateCharacter)
+	network.LoginEvent[*ProtoMessage.DeleteCharacterRequest](g.OnDeleteCharacter)
 }
 func (g *GUserService) Stop() {
 	network.LogoffEvent[*ProtoMessage.RegisterRequest]()
 	network.LogoffEvent[*ProtoMessage.LoginRequest]()
 	network.LogoffEvent[*ProtoMessage.CreateCharacterRequest]()
+	network.LogoffEvent[*ProtoMessage.DeleteCharacterRequest]()
+}
+
+// DbCharacter2PCharacter
+//
+//	@Description: 将数据库Character转换成Protobuf的Character
+//	@param dbCharacter
+//	@return []*ProtoMessage.PCharacter
+func DbCharacter2PCharacter(dbCharacter []*Model.DbCharacter) []*ProtoMessage.PCharacter {
+	var pCharacters []*ProtoMessage.PCharacter
+	for _, c := range dbCharacter {
+		pc := &ProtoMessage.PCharacter{
+			Id:    c.ID,
+			Name:  c.Name,
+			Class: ProtoMessage.CharacterClass(c.Class),
+			Level: c.Level,
+		}
+		pCharacters = append(pCharacters, pc)
+	}
+
+	return pCharacters
 }
 
 // OnUserRegister
@@ -116,16 +139,17 @@ func (g *GUserService) OnUserLogin(sender *network.GConnection, msg interface{})
 		Characters: []*ProtoMessage.PCharacter{},
 	}
 
-	// 把dbUser的角色信息转换成protobuf
-	for _, c := range dbUser.Characters {
-		netCharacter := &ProtoMessage.PCharacter{
-			Id:    c.ID,
-			Name:  c.Name,
-			Class: ProtoMessage.CharacterClass(c.Class),
-			Level: c.Level,
-		}
-		newMsg.Response.Login.User.Characters = append(newMsg.Response.Login.User.Characters, netCharacter)
-	}
+	//// 把dbUser的角色信息转换成protobuf
+	//for _, c := range dbUser.Characters {
+	//	netCharacter := &ProtoMessage.PCharacter{
+	//		Id:    c.ID,
+	//		Name:  c.Name,
+	//		Class: ProtoMessage.CharacterClass(c.Class),
+	//		Level: c.Level,
+	//	}
+	//	newMsg.Response.Login.User.Characters = append(newMsg.Response.Login.User.Characters, netCharacter)
+	//}
+	newMsg.Response.Login.User.Characters = DbCharacter2PCharacter(dbUser.Characters)
 
 	newMsg.Response.Login.Result = ProtoMessage.RESULT_SUCCESS
 	newMsg.Response.Login.Error = ProtoMessage.Error_None
@@ -133,6 +157,12 @@ func (g *GUserService) OnUserLogin(sender *network.GConnection, msg interface{})
 	sender.SendMsg(newMsg)
 }
 
+// OnCreateCharacter
+//
+//	@Description: 用户创建角色消息触发事件
+//	@receiver g
+//	@param sender
+//	@param msg
 func (g *GUserService) OnCreateCharacter(sender *network.GConnection, msg interface{}) {
 	request, ok := msg.(*ProtoMessage.CreateCharacterRequest)
 	if !ok {
@@ -148,8 +178,6 @@ func (g *GUserService) OnCreateCharacter(sender *network.GConnection, msg interf
 		int(request.CharacterClass),
 	)
 
-	sender.Session().User.Characters = newCharacters
-
 	sender.Session().GetNetResponse().CreateCharacter = &ProtoMessage.CreateCharacterResponse{}
 
 	if err != nil {
@@ -159,19 +187,36 @@ func (g *GUserService) OnCreateCharacter(sender *network.GConnection, msg interf
 		return
 	}
 
+	sender.Session().User.Characters = newCharacters
+
 	sender.Session().GetNetResponse().CreateCharacter.Result = ProtoMessage.RESULT_SUCCESS
-	var netCharacters []*ProtoMessage.PCharacter
-	for _, c := range newCharacters {
-		netChar := &ProtoMessage.PCharacter{
-			Id:    c.ID,
-			Name:  c.Name,
-			Class: ProtoMessage.CharacterClass(c.Class),
-			Level: c.Level,
-		}
-		netCharacters = append(netCharacters, netChar)
+
+	sender.Session().GetNetResponse().CreateCharacter.Characters = DbCharacter2PCharacter(newCharacters)
+	sender.SendResponse()
+
+}
+
+func (g *GUserService) OnDeleteCharacter(sender *network.GConnection, msg interface{}) {
+	request, ok := msg.(*ProtoMessage.DeleteCharacterRequest)
+	if !ok {
+		mlog.Warning.Println("Message[DeleteCharacterRequest]强转失败")
 	}
 
-	sender.Session().GetNetResponse().CreateCharacter.Characters = netCharacters
+	newCharacters, err := g.manager.DeleteCharacter(sender.Session().User.UID, request.CharacterId)
+
+	sender.Session().GetNetResponse().DeleteCharacter = &ProtoMessage.DeleteCharacterResponse{}
+
+	if err != nil {
+		sender.Session().GetNetResponse().DeleteCharacter.Result = ProtoMessage.RESULT_FAILED
+		sender.Session().GetNetResponse().DeleteCharacter.Error = err2protobuf.Convert(err)
+		sender.SendResponse()
+		return
+	}
+
+	sender.Session().User.Characters = newCharacters
+
+	sender.Session().GetNetResponse().DeleteCharacter.Result = ProtoMessage.RESULT_SUCCESS
+	sender.Session().GetNetResponse().DeleteCharacter.Characters = DbCharacter2PCharacter(newCharacters)
 	sender.SendResponse()
 
 }

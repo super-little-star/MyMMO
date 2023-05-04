@@ -51,7 +51,9 @@ func (mh *GMessageHandOut) HandOutRequest(sender *GConnection, request *ProtoMes
 	if request.CreateCharacter != nil {
 		mh.triggerEvents(sender, request.CreateCharacter)
 	}
-
+	if request.DeleteCharacter != nil {
+		mh.triggerEvents(sender, request.DeleteCharacter)
+	}
 }
 
 func (mh *GMessageHandOut) AddEvent(key string, event func(sender *GConnection, msg interface{})) {

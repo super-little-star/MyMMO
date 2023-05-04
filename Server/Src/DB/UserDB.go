@@ -165,3 +165,27 @@ func CreateCharacter(uid int64, name string, class int, createTime int64) error 
 	}
 	return ErrCharacterNameExist
 }
+
+func DeleteCharacter(uid int64, characterId int32) error {
+
+	tx, err := dB.Begin()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		_ = tx.Rollback()
+	}()
+
+	s := "DELETE FROM DbCharacter WHERE ID = ? AND UserID = ?"
+
+	ret, _ := tx.Exec(s, characterId, uid)
+
+	ex, _ := ret.RowsAffected()
+
+	if ex > 0 {
+		return nil
+	} else {
+		return ErrSql
+	}
+
+}
