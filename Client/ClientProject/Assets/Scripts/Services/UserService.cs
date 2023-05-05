@@ -20,6 +20,7 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
         MessageHandOut.Instance.Login<RegisterResponse>(OnUserRegister);
         MessageHandOut.Instance.Login<LoginResponse>(OnUserLogin);
         MessageHandOut.Instance.Login<CreateCharacterResponse>(OnCreateCharacter);
+        MessageHandOut.Instance.Login<DeleteCharacterResponse>(OnDeleteCharacter);
     }
 
     public void Dispose()
@@ -27,6 +28,7 @@ public class UserSerice : Singleton<UserSerice>, IDisposable
         MessageHandOut.Instance.Logout<RegisterResponse>(OnUserRegister);
         MessageHandOut.Instance.Logout<LoginResponse>(OnUserLogin);
         MessageHandOut.Instance.Logout<CreateCharacterResponse>(OnCreateCharacter);
+        MessageHandOut.Instance.Logout<DeleteCharacterResponse>(OnDeleteCharacter);
     }
 
     #region Register

@@ -183,6 +183,7 @@ func DeleteCharacter(uid int64, characterId int32) error {
 	ex, _ := ret.RowsAffected()
 
 	if ex > 0 {
+		_ = tx.Commit()
 		return nil
 	} else {
 		return ErrSql

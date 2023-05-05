@@ -49,7 +49,10 @@ public class UICharacterInfoItem : MonoBehaviour
         {
             if(this.Info != null)
             {
-                UserSerice.Instance.SendDeleteCharacter(this.info.Id);
+                UIManager.Instance.ComfirmPopup(UIPopup.Level.Warnning, "是否删除角色", "此操作不可逆，请确认").AddComfirmEvent(() =>
+                {
+                    UserSerice.Instance.SendDeleteCharacter(this.info.Id);
+                });
             }
         });
     }
