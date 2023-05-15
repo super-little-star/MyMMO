@@ -16,9 +16,10 @@ message PCharacter {
     string Name = 3;
     CharacterClass Class = 4;
     int32 Level = 6;
+    PEntity Entity = 7;
 }
 
-message PNetity {
+message PEntity {
     int32 Id = 1;
     PVector3 Position = 2;
     PVector3 Direction = 3;

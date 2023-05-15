@@ -44,10 +44,13 @@ namespace ProtoMessage
         [global::ProtoBuf.ProtoMember(6)]
         public int Level { get; set; }
 
+        [global::ProtoBuf.ProtoMember(7)]
+        public PEntity Entity { get; set; }
+
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class PNetity : global::ProtoBuf.IExtensible
+    public partial class PEntity : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
