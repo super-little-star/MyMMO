@@ -1,0 +1,16 @@
+syntax = "proto3";
+option go_package = "./ProtoMessage;ProtoMessage";
+option csharp_namespace = "ProtoMessage"; 
+package ProtoMessage;
+
+////////////////////////////////////////////////////////////////
+//
+//  Core
+//
+////////////////////////////////////////////////////////////////
+
+message PVector3 {
+    int32 x = 1;
+    int32 y = 2;
+    int32 z = 3;
+}

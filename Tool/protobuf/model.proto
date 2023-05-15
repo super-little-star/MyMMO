@@ -4,6 +4,7 @@ option csharp_namespace = "ProtoMessage";
 package ProtoMessage;
 
 import "enum.proto";
+import "core.proto";
 
 message PUser {
     int64 uid = 1;
@@ -14,6 +15,12 @@ message PCharacter {
     int32 Id = 1;
     string Name = 3;
     CharacterClass Class = 4;
-    CharacterType Type = 5;
     int32 Level = 6;
+}
+
+message PNetity {
+    int32 Id = 1;
+    PVector3 Position = 2;
+    PVector3 Direction = 3;
+    int32 Speed = 4;
 }

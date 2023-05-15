@@ -41,11 +41,29 @@ namespace ProtoMessage
         [global::ProtoBuf.ProtoMember(4)]
         public CharacterClass Class { get; set; }
 
-        [global::ProtoBuf.ProtoMember(5)]
-        public CharacterType Type { get; set; }
-
         [global::ProtoBuf.ProtoMember(6)]
         public int Level { get; set; }
+
+    }
+
+    [global::ProtoBuf.ProtoContract()]
+    public partial class PNetity : global::ProtoBuf.IExtensible
+    {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
+        [global::ProtoBuf.ProtoMember(1)]
+        public int Id { get; set; }
+
+        [global::ProtoBuf.ProtoMember(2)]
+        public PVector3 Position { get; set; }
+
+        [global::ProtoBuf.ProtoMember(3)]
+        public PVector3 Direction { get; set; }
+
+        [global::ProtoBuf.ProtoMember(4)]
+        public int Speed { get; set; }
 
     }
 
