@@ -9,13 +9,13 @@ namespace Network
         private int readOffset = 0;
 
 
-        public void ReceiveMsg(byte[] data)
+        public void ReceiveMsg(byte[] data,int len)
         {
-            if (stream.Position + data.Length > stream.Capacity)
+            if (stream.Position + len > stream.Capacity)
             {
                 throw new Exception("Package Handler buffer overflow");
             }
-            stream.Write(data, 0, data.Length);
+            stream.Write(data, 0, len);
 
             ParsePackage();
         }

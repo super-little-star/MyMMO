@@ -3,7 +3,7 @@ package network
 import (
 	"encoding/binary"
 	"io"
-	ProtoMessage "mmo_server/protocol"
+	"mmo_server/ProtoMessage"
 	"mmo_server/utils/mlog"
 	"net"
 )
@@ -141,4 +141,20 @@ func (c *GConnection) Session() *GSession {
 		return c.session
 	}
 	return nil
+}
+
+// SendResponse
+//
+//	@Description:
+//	@receiver c
+func (c *GConnection) SendResponse() {
+	if c.session.NetMsg == nil {
+		mlog.Warning.Printf("Conn[%v] Response is nil", c.conn.RemoteAddr())
+		return
+	}
+	data := PackMessage(c.session.NetMsg)
+	if data != nil {
+		c.chanSendData <- data
+	}
+	c.session.NetMsg = nil
 }

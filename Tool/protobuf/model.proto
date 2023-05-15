@@ -1,0 +1,19 @@
+syntax = "proto3";
+option go_package = "./ProtoMessage;ProtoMessage";
+option csharp_namespace = "ProtoMessage"; 
+package ProtoMessage;
+
+import "enum.proto";
+
+message PUser {
+    int64 uid = 1;
+    repeated PCharacter characters = 2;
+}
+
+message PCharacter {
+    int32 Id = 1;
+    string Name = 3;
+    CharacterClass Class = 4;
+    CharacterType Type = 5;
+    int32 Level = 6;
+}

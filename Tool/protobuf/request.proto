@@ -1,0 +1,30 @@
+syntax = "proto3";
+option go_package = "./ProtoMessage;ProtoMessage";
+option csharp_namespace = "ProtoMessage"; 
+package ProtoMessage;
+
+import "enum.proto";
+
+////////////////////////////////////////////////////////////////
+//
+//  Request
+//
+////////////////////////////////////////////////////////////////
+message RegisterRequest {
+    string userName = 1;
+    string passward = 2;
+}
+
+message LoginRequest {
+    string userName = 1;
+    string passward = 2;
+}
+
+message CreateCharacterRequest {
+    string name = 1;
+    CharacterClass characterClass = 2;
+}
+
+message DeleteCharacterRequest {
+    int32 characterId = 1;
+}

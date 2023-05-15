@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"google.golang.org/protobuf/proto"
-	ProtoMessage "mmo_server/protocol"
+	ProtoMessage "mmo_server/ProtoMessage"
 	"mmo_server/utils/mlog"
 )
 
@@ -45,7 +45,7 @@ func (ph *PackageHandler) parsePackage(msgLen uint32) error {
 	buf := UnpackMessage(ph.stream, msgLen)
 
 	// 把转换到的Protobuf对象传给消息处理中心处理
-	Instance().MessageHandleCenter.AcceptMessage(ph.sender, buf)
+	MessageHandleCenter().AcceptMessage(ph.sender, buf)
 
 	//包体读取完毕，重置缓存
 	ph.stream.Reset()

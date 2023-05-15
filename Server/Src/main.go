@@ -12,8 +12,11 @@ func init() {
 	globalConfig.Init()
 	mlog.Init()
 	// 各个包单例模式初始化
-	network.InitSingleton()
-	services.InitSingleton()
+	network.MessageHandleCenterInit()
+	network.MessageHandOutInit()
+	network.ConnectionManagerInit()
+
+	services.UserServiceInit()
 }
 
 func main() {

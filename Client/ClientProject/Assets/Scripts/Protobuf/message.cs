@@ -32,7 +32,16 @@ namespace ProtoMessage
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
         [global::ProtoBuf.ProtoMember(1)]
-        public NUserRegisterRequest userRegister { get; set; }
+        public RegisterRequest Register { get; set; }
+
+        [global::ProtoBuf.ProtoMember(2)]
+        public LoginRequest Login { get; set; }
+
+        [global::ProtoBuf.ProtoMember(3)]
+        public CreateCharacterRequest CreateCharacter { get; set; }
+
+        [global::ProtoBuf.ProtoMember(4)]
+        public DeleteCharacterRequest DeleteCharacter { get; set; }
 
     }
 
@@ -44,50 +53,17 @@ namespace ProtoMessage
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
         [global::ProtoBuf.ProtoMember(1)]
-        public NUserRegisterResponse userRegister { get; set; }
+        public RegisterResponse Register { get; set; }
 
-    }
+        [global::ProtoBuf.ProtoMember(2)]
+        public LoginResponse Login { get; set; }
 
-    [global::ProtoBuf.ProtoContract()]
-    public partial class NUserRegisterRequest : global::ProtoBuf.IExtensible
-    {
-        private global::ProtoBuf.IExtension __pbn__extensionData;
-        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+        [global::ProtoBuf.ProtoMember(3)]
+        public CreateCharacterResponse CreateCharacter { get; set; }
 
-        [global::ProtoBuf.ProtoMember(1)]
-        [global::System.ComponentModel.DefaultValue("")]
-        public string userName { get; set; } = "";
+        [global::ProtoBuf.ProtoMember(4)]
+        public DeleteCharacterResponse DeleteCharacter { get; set; }
 
-        [global::ProtoBuf.ProtoMember(2, Name = @"passward")]
-        [global::System.ComponentModel.DefaultValue("")]
-        public string Passward { get; set; } = "";
-
-    }
-
-    [global::ProtoBuf.ProtoContract()]
-    public partial class NUserRegisterResponse : global::ProtoBuf.IExtensible
-    {
-        private global::ProtoBuf.IExtension __pbn__extensionData;
-        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
-
-        [global::ProtoBuf.ProtoMember(1, Name = @"result")]
-        public Result Result { get; set; }
-
-        [global::ProtoBuf.ProtoMember(2, Name = @"errormsg")]
-        [global::System.ComponentModel.DefaultValue("")]
-        public string Errormsg { get; set; } = "";
-
-    }
-
-    [global::ProtoBuf.ProtoContract(Name = @"RESULT")]
-    public enum Result
-    {
-        [global::ProtoBuf.ProtoEnum(Name = @"SUCCESS")]
-        Success = 0,
-        [global::ProtoBuf.ProtoEnum(Name = @"FAILED")]
-        Failed = 1,
     }
 
 }

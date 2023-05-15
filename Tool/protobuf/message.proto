@@ -1,18 +1,11 @@
 syntax = "proto3";
-option go_package = "./Protocol;ProtoMessage";
+option go_package = "./ProtoMessage;ProtoMessage";
 option csharp_namespace = "ProtoMessage"; 
 package ProtoMessage;
 
-////////////////////////////////////////////////////////////////
-//
-//  Data Basic
-//
-////////////////////////////////////////////////////////////////
+import "request.proto";
+import "response.proto";
 
-enum RESULT {
-    SUCCESS = 0;
-    FAILED = 1;
-}
 
 ////////////////////////////////////////////////////////////////
 //
@@ -25,18 +18,17 @@ message NetMessage {
 }
 
 message NetMessageRequest{
-    NUserRegisterRequest userRegister = 1;
+    RegisterRequest Register = 1;
+    LoginRequest Login = 2;
+    CreateCharacterRequest CreateCharacter = 3;
+    DeleteCharacterRequest DeleteCharacter = 4;
 }
 
 message NetMessageResponse{
-    NUserRegisterResponse userRegister = 1;
+    RegisterResponse Register = 1;
+    LoginResponse Login = 2;
+    CreateCharacterResponse CreateCharacter = 3;
+    DeleteCharacterResponse DeleteCharacter = 4;
 }
 
-message NUserRegisterRequest {
-    string userName = 1;
-    string passward = 2;
-}
-message NUserRegisterResponse {
-    RESULT result = 1;
-    string errormsg = 2;
-}
+

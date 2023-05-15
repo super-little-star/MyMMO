@@ -1,0 +1,27 @@
+syntax = "proto3";
+option go_package = "./ProtoMessage;ProtoMessage";
+option csharp_namespace = "ProtoMessage"; 
+package ProtoMessage;
+
+////////////////////////////////////////////////////////////////
+//
+//  Enum
+//
+////////////////////////////////////////////////////////////////
+enum RESULT {
+    SUCCESS = 0;
+    FAILED = 1;
+}
+
+// 职业
+enum CharacterClass {
+    Warrior = 0; // 战士
+    Hunter = 1; // 猎人
+    Sorcerer = 2; // 法师
+}
+
+enum CharacterType {
+    Player = 0;//玩家
+    Other = 1;// 其他玩家
+    Monster = 2;//怪物
+}

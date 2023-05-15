@@ -1,11 +1,15 @@
 package network
 
-import ProtoMessage "mmo_server/protocol"
+import (
+	"mmo_server/DB/Model"
+	ProtoMessage "mmo_server/ProtoMessage"
+)
 
 // TODO 用户数据实体
 
 type GSession struct {
-	response *ProtoMessage.NetMessage
+	User   *Model.DbUser
+	NetMsg *ProtoMessage.NetMessage
 }
 
 func NewSession() *GSession {
@@ -13,20 +17,26 @@ func NewSession() *GSession {
 }
 
 func (ns *GSession) Disconnected() {
-	// TODO 会话断开后的处理
+	if ns.User != nil {
+		ConnectionManager().RemoveUser(ns.User.UID)
+		ns.User = nil
+	}
+	ns.NetMsg = nil
 }
 
 // GetNetResponse 获取Protobuf类型的Response
-func (ns *GSession) GetNetResponse() *ProtoMessage.NetMessage {
-	if ns.response == nil {
-		ns.response = &ProtoMessage.NetMessage{}
+func (ns *GSession) GetNetResponse() *ProtoMessage.NetMessageResponse {
+	if ns.NetMsg == nil {
+		ns.NetMsg = &ProtoMessage.NetMessage{
+			Response: &ProtoMessage.NetMessageResponse{},
+		}
 	}
-	return ns.response
+	return ns.NetMsg.Response
 }
 
 // GetByteResponse 将Protobuf类型转换成Byte字节流
 func (ns *GSession) GetByteResponse() []byte {
-	if ns.response != nil {
+	if ns.NetMsg != nil {
 		// TODO 消息处理
 	}
 	return nil

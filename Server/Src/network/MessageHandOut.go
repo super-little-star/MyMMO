@@ -1,10 +1,12 @@
 package network
 
 import (
-	ProtoMessage "mmo_server/protocol"
+	ProtoMessage "mmo_server/ProtoMessage"
 	"mmo_server/utils/mlog"
 	"reflect"
 )
+
+var messageHandOut IMessageHandOut
 
 type IMessageHandOut interface {
 	Init()
@@ -15,6 +17,15 @@ type IMessageHandOut interface {
 
 type GMessageHandOut struct {
 	messageEvents map[string]func(sender *GConnection, message interface{}) // 消息对应的世界处理
+}
+
+func MessageHandOutInit() {
+	messageHandOut = &GMessageHandOut{}
+	messageHandOut.Init()
+}
+
+func MessageHandout() IMessageHandOut {
+	return messageHandOut
 }
 
 func (mh *GMessageHandOut) Init() {
@@ -31,10 +42,18 @@ func (mh *GMessageHandOut) HandOutRequest(sender *GConnection, request *ProtoMes
 	if request == nil {
 		return
 	}
-	if request.UserRegister != nil {
-		mh.triggerEvents(sender, request.UserRegister)
+	if request.Register != nil {
+		mh.triggerEvents(sender, request.Register)
 	}
-
+	if request.Login != nil {
+		mh.triggerEvents(sender, request.Login)
+	}
+	if request.CreateCharacter != nil {
+		mh.triggerEvents(sender, request.CreateCharacter)
+	}
+	if request.DeleteCharacter != nil {
+		mh.triggerEvents(sender, request.DeleteCharacter)
+	}
 }
 
 func (mh *GMessageHandOut) AddEvent(key string, event func(sender *GConnection, msg interface{})) {
@@ -77,7 +96,7 @@ func (mh *GMessageHandOut) triggerEvents(sender *GConnection, mes interface{}) {
 func LoginEvent[T any](event func(sender *GConnection, msg interface{})) {
 	var t T
 	key := reflect.TypeOf(t).String()
-	Instance().MessageHandOut.AddEvent(key, event)
+	MessageHandout().AddEvent(key, event)
 	mlog.Info.Printf("LoginEvent Message Event[%s]%v Success", key, event)
 }
 
@@ -87,5 +106,6 @@ func LoginEvent[T any](event func(sender *GConnection, msg interface{})) {
 func LogoffEvent[T any]() {
 	var t T
 	key := reflect.TypeOf(t).String()
-	Instance().MessageHandOut.RemoveEvent(key)
+	MessageHandout().RemoveEvent(key)
+	mlog.Info.Printf("LogoffEvent Message Event[%s] success", key)
 }
