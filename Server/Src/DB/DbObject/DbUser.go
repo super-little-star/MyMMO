@@ -1,4 +1,4 @@
-package Model
+package DbObject
 
 type DbUser struct {
 	UID          int64

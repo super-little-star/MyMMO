@@ -1,4 +1,4 @@
-package Model
+package DbObject
 
 type DbCharacter struct {
 	ID         int32

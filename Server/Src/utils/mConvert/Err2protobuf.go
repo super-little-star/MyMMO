@@ -1,4 +1,4 @@
-package err2protobuf
+package mConvert
 
 import (
 	"mmo_server/DB"
@@ -7,12 +7,12 @@ import (
 	"mmo_server/network"
 )
 
-// Convert
+// Err2Protobuf
 //
 //	@Description: 将error装换成Protobuf的枚举
 //	@param err
 //	@return ProtoMessage.Error
-func Convert(err error) ProtoMessage.Error {
+func Err2Protobuf(err error) ProtoMessage.Error {
 	switch err {
 	case DB.ErrUserNameExist: // 用户名已存在
 		return ProtoMessage.Error_RegisterUserNameExist

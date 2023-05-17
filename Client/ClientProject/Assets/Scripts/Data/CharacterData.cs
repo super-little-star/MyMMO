@@ -6,7 +6,7 @@ public enum CharacterClass
 {
     Warrior = 0,
     Hunter = 1,
-    Sorcere = 2,
+    Sorcerer = 2,
 }
 
 public class CharacterData

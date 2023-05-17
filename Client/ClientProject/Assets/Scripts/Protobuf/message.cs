@@ -43,6 +43,12 @@ namespace ProtoMessage
         [global::ProtoBuf.ProtoMember(4)]
         public DeleteCharacterRequest DeleteCharacter { get; set; }
 
+        [global::ProtoBuf.ProtoMember(5)]
+        public CharacterEnterGameRequest CharacterEnterGame { get; set; }
+
+        [global::ProtoBuf.ProtoMember(6)]
+        public MapCharacterEnterRequest MapCharacterEnter { get; set; }
+
     }
 
     [global::ProtoBuf.ProtoContract()]
@@ -63,6 +69,12 @@ namespace ProtoMessage
 
         [global::ProtoBuf.ProtoMember(4)]
         public DeleteCharacterResponse DeleteCharacter { get; set; }
+
+        [global::ProtoBuf.ProtoMember(5)]
+        public CharacterEnterGameResponse CharacterEnterGame { get; set; }
+
+        [global::ProtoBuf.ProtoMember(6)]
+        public MapCharacterEnterResponse MapCharacterEnter { get; set; }
 
     }
 
