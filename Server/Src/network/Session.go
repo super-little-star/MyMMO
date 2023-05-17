@@ -1,15 +1,17 @@
 package network
 
 import (
-	"mmo_server/DB/Model"
+	"mmo_server/DB/DbObject"
 	ProtoMessage "mmo_server/ProtoMessage"
+	"mmo_server/object"
 )
 
 // TODO 用户数据实体
 
 type GSession struct {
-	User   *Model.DbUser
-	NetMsg *ProtoMessage.NetMessage
+	User      *DbObject.DbUser
+	NetMsg    *ProtoMessage.NetMessage
+	Character *object.Character
 }
 
 func NewSession() *GSession {

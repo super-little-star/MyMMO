@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"mmo_server/DB/Model"
+	"mmo_server/DB/DbObject"
 )
 
 var (
@@ -69,12 +69,12 @@ func Register(uid int64, userName string, psw string, rt int64) error {
 //
 //	@Description: 获取用户信息
 //	@param userName
-//	@return *Model.DbUser
+//	@return *DbObject.DbUser
 //	@return error
-func GetDbUser(userName string) (*Model.DbUser, error) {
+func GetDbUser(userName string) (*DbObject.DbUser, error) {
 	s := "SELECT UID,Password,RegisterTime FROM DBUser WHERE userName = ? LIMIT 1"
 	row := dB.QueryRow(s, userName)
-	user := &Model.DbUser{}
+	user := &DbObject.DbUser{}
 	if err := row.Scan(&user.UID, &user.Password, &user.RegisterTime); err != nil {
 		switch err {
 		case sql.ErrNoRows:
@@ -93,9 +93,9 @@ func GetDbUser(userName string) (*Model.DbUser, error) {
 //	@Description: 获取角色列表
 //	@param user
 //	@return error
-func GetCharacters(uid int64) ([]*Model.DbCharacter, error) {
+func GetCharacters(uid int64) ([]*DbObject.DbCharacter, error) {
 
-	var characters []*Model.DbCharacter
+	var characters []*DbObject.DbCharacter
 
 	str := "SELECT ID,UserID,Name,Class,Level From DbCharacter WHERE UserID = ?"
 	rows, err := dB.Query(str, uid)
@@ -115,7 +115,7 @@ func GetCharacters(uid int64) ([]*Model.DbCharacter, error) {
 	}
 
 	for rows.Next() {
-		c := &Model.DbCharacter{}
+		c := &DbObject.DbCharacter{}
 		if err := rows.Scan(&c.ID, &c.UserID, &c.Name, &c.Class, &c.Level); err != nil {
 			return nil, err
 		}

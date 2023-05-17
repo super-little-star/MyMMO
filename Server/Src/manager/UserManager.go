@@ -3,7 +3,7 @@ package manager
 import (
 	"errors"
 	"mmo_server/DB"
-	"mmo_server/DB/Model"
+	"mmo_server/DB/DbObject"
 	"mmo_server/utils/gencrypt"
 	"mmo_server/utils/xuid"
 	"time"
@@ -13,9 +13,9 @@ var ErrPasswordNotMatch = errors.New("manager:: user password is not match")
 
 type IUserManager interface {
 	UserRegister(userName string, psw string) error
-	UserLogin(userName string, psw string) (*Model.DbUser, error)
-	CreateCharacter(uid int64, name string, class int) ([]*Model.DbCharacter, error)
-	DeleteCharacter(uid int64, characterId int32) ([]*Model.DbCharacter, error)
+	UserLogin(userName string, psw string) (*DbObject.DbUser, error)
+	CreateCharacter(uid int64, name string, class int) ([]*DbObject.DbCharacter, error)
+	DeleteCharacter(uid int64, characterId int32) ([]*DbObject.DbCharacter, error)
 }
 
 type GUserManager struct {
@@ -53,9 +53,9 @@ func (u *GUserManager) UserRegister(userName string, psw string) error {
 //	@receiver u
 //	@param userName 用户名
 //	@param psw 密码
-//	@return *Model.DbUser 返回一个用户实体
+//	@return *DbObject.DbUser 返回一个用户实体
 //	@return error
-func (u *GUserManager) UserLogin(userName string, psw string) (*Model.DbUser, error) {
+func (u *GUserManager) UserLogin(userName string, psw string) (*DbObject.DbUser, error) {
 	user, err := DB.GetDbUser(userName)
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (u *GUserManager) UserLogin(userName string, psw string) (*Model.DbUser, er
 	return user, nil
 }
 
-func (u *GUserManager) CreateCharacter(uid int64, name string, class int) ([]*Model.DbCharacter, error) {
+func (u *GUserManager) CreateCharacter(uid int64, name string, class int) ([]*DbObject.DbCharacter, error) {
 	if err := DB.CreateCharacter(uid, name, class, time.Now().Unix()); err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func (u *GUserManager) CreateCharacter(uid int64, name string, class int) ([]*Mo
 	return DB.GetCharacters(uid)
 }
 
-func (u *GUserManager) DeleteCharacter(uid int64, characterId int32) ([]*Model.DbCharacter, error) {
+func (u *GUserManager) DeleteCharacter(uid int64, characterId int32) ([]*DbObject.DbCharacter, error) {
 	if err := DB.DeleteCharacter(uid, characterId); err != nil {
 		return nil, err
 	}

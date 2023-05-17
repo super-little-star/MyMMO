@@ -237,6 +237,100 @@ func (x *DeleteCharacterRequest) GetCharacterId() int32 {
 	return 0
 }
 
+type CharacterEnterGameRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	CharacterId int32 `protobuf:"varint,1,opt,name=characterId,proto3" json:"characterId,omitempty"`
+}
+
+func (x *CharacterEnterGameRequest) Reset() {
+	*x = CharacterEnterGameRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_request_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CharacterEnterGameRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CharacterEnterGameRequest) ProtoMessage() {}
+
+func (x *CharacterEnterGameRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_request_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CharacterEnterGameRequest.ProtoReflect.Descriptor instead.
+func (*CharacterEnterGameRequest) Descriptor() ([]byte, []int) {
+	return file_request_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CharacterEnterGameRequest) GetCharacterId() int32 {
+	if x != nil {
+		return x.CharacterId
+	}
+	return 0
+}
+
+type MapCharacterEnterRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	MapId int32 `protobuf:"varint,1,opt,name=mapId,proto3" json:"mapId,omitempty"`
+}
+
+func (x *MapCharacterEnterRequest) Reset() {
+	*x = MapCharacterEnterRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_request_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MapCharacterEnterRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MapCharacterEnterRequest) ProtoMessage() {}
+
+func (x *MapCharacterEnterRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_request_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MapCharacterEnterRequest.ProtoReflect.Descriptor instead.
+func (*MapCharacterEnterRequest) Descriptor() ([]byte, []int) {
+	return file_request_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *MapCharacterEnterRequest) GetMapId() int32 {
+	if x != nil {
+		return x.MapId
+	}
+	return 0
+}
+
 var File_request_proto protoreflect.FileDescriptor
 
 var file_request_proto_rawDesc = []byte{
@@ -262,11 +356,18 @@ var file_request_proto_rawDesc = []byte{
 	0x22, 0x3a, 0x0a, 0x16, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x68, 0x61, 0x72, 0x61, 0x63,
 	0x74, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x20, 0x0a, 0x0b, 0x63, 0x68,
 	0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52,
-	0x0b, 0x63, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x49, 0x64, 0x42, 0x2c, 0x5a, 0x1b,
-	0x2e, 0x2f, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x3b, 0x50,
-	0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0xaa, 0x02, 0x0c, 0x50, 0x72,
-	0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x0b, 0x63, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x49, 0x64, 0x22, 0x3d, 0x0a, 0x19,
+	0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x45, 0x6e, 0x74, 0x65, 0x72, 0x47, 0x61,
+	0x6d, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x20, 0x0a, 0x0b, 0x63, 0x68, 0x61,
+	0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0b,
+	0x63, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x49, 0x64, 0x22, 0x30, 0x0a, 0x18, 0x4d,
+	0x61, 0x70, 0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x45, 0x6e, 0x74, 0x65, 0x72,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x6d, 0x61, 0x70, 0x49, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x6d, 0x61, 0x70, 0x49, 0x64, 0x42, 0x2c, 0x5a,
+	0x1b, 0x2e, 0x2f, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x3b,
+	0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0xaa, 0x02, 0x0c, 0x50,
+	0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -281,16 +382,18 @@ func file_request_proto_rawDescGZIP() []byte {
 	return file_request_proto_rawDescData
 }
 
-var file_request_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_request_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_request_proto_goTypes = []interface{}{
-	(*RegisterRequest)(nil),        // 0: ProtoMessage.RegisterRequest
-	(*LoginRequest)(nil),           // 1: ProtoMessage.LoginRequest
-	(*CreateCharacterRequest)(nil), // 2: ProtoMessage.CreateCharacterRequest
-	(*DeleteCharacterRequest)(nil), // 3: ProtoMessage.DeleteCharacterRequest
-	(CharacterClass)(0),            // 4: ProtoMessage.CharacterClass
+	(*RegisterRequest)(nil),           // 0: ProtoMessage.RegisterRequest
+	(*LoginRequest)(nil),              // 1: ProtoMessage.LoginRequest
+	(*CreateCharacterRequest)(nil),    // 2: ProtoMessage.CreateCharacterRequest
+	(*DeleteCharacterRequest)(nil),    // 3: ProtoMessage.DeleteCharacterRequest
+	(*CharacterEnterGameRequest)(nil), // 4: ProtoMessage.CharacterEnterGameRequest
+	(*MapCharacterEnterRequest)(nil),  // 5: ProtoMessage.MapCharacterEnterRequest
+	(CharacterClass)(0),               // 6: ProtoMessage.CharacterClass
 }
 var file_request_proto_depIdxs = []int32{
-	4, // 0: ProtoMessage.CreateCharacterRequest.characterClass:type_name -> ProtoMessage.CharacterClass
+	6, // 0: ProtoMessage.CreateCharacterRequest.characterClass:type_name -> ProtoMessage.CharacterClass
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -353,6 +456,30 @@ func file_request_proto_init() {
 				return nil
 			}
 		}
+		file_request_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CharacterEnterGameRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_request_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MapCharacterEnterRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -360,7 +487,7 @@ func file_request_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_request_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

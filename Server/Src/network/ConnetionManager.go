@@ -2,7 +2,7 @@ package network
 
 import (
 	"errors"
-	"mmo_server/DB/Model"
+	"mmo_server/DB/DbObject"
 	"mmo_server/utils/mlog"
 )
 
@@ -14,17 +14,17 @@ var connectionManager IConnectionManager
 type IConnectionManager interface {
 	Init()
 
-	AddUser(user *Model.DbUser) error
+	AddUser(user *DbObject.DbUser) error
 	RemoveUser(uid int64)
 
-	GetConn(characterId int) *GConnection
-	AddConn(characterId int, conn *GConnection) error
-	RemoveConn(characterId int)
+	GetConn(characterId int32) *GConnection
+	AddConn(characterId int32, conn *GConnection) error
+	RemoveConn(characterId int32)
 }
 
 type GConnectionManager struct {
-	connections map[int]*GConnection
-	Users       map[int64]*Model.DbUser
+	connections map[int32]*GConnection
+	Users       map[int64]*DbObject.DbUser
 }
 
 func ConnectionManagerInit() {
@@ -36,11 +36,11 @@ func ConnectionManager() IConnectionManager {
 }
 
 func (cm *GConnectionManager) Init() {
-	cm.connections = make(map[int]*GConnection)
-	cm.Users = make(map[int64]*Model.DbUser)
+	cm.connections = make(map[int32]*GConnection)
+	cm.Users = make(map[int64]*DbObject.DbUser)
 }
 
-func (cm *GConnectionManager) AddUser(user *Model.DbUser) error {
+func (cm *GConnectionManager) AddUser(user *DbObject.DbUser) error {
 	if _, ok := cm.Users[user.UID]; ok {
 		return ErrUserIsOnline
 	} else {
@@ -52,7 +52,7 @@ func (cm *GConnectionManager) RemoveUser(uid int64) {
 	delete(cm.Users, uid)
 }
 
-func (cm *GConnectionManager) AddConn(characterId int, conn *GConnection) error {
+func (cm *GConnectionManager) AddConn(characterId int32, conn *GConnection) error {
 	if _, ok := cm.connections[characterId]; !ok {
 		cm.connections[characterId] = conn
 		return nil
@@ -61,7 +61,7 @@ func (cm *GConnectionManager) AddConn(characterId int, conn *GConnection) error 
 	}
 }
 
-func (cm *GConnectionManager) RemoveConn(characterId int) {
+func (cm *GConnectionManager) RemoveConn(characterId int32) {
 	delete(cm.connections, characterId)
 }
 
@@ -71,7 +71,7 @@ func (cm *GConnectionManager) RemoveConn(characterId int) {
 //	@receiver cm
 //	@param characterId 角色ID
 //	@return *network.GConnection 返回对应的链接
-func (cm *GConnectionManager) GetConn(characterId int) *GConnection {
+func (cm *GConnectionManager) GetConn(characterId int32) *GConnection {
 	c, ok := cm.connections[characterId]
 	if ok {
 		return c

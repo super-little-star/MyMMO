@@ -92,10 +92,10 @@ func (c *GConnection) writeMsg() {
 		select {
 		case data := <-c.chanSendData: // 把需要发送的信息取出来发送出去
 			if _, err := c.conn.Write(data); err != nil {
-				mlog.Error.Printf("Client[%s] connection write data is error : %v\n", c.conn.RemoteAddr(), err)
+				mlog.Error.Printf("Client[%s] connection write gameData is error : %v\n", c.conn.RemoteAddr(), err)
 				break
 			}
-			mlog.Info.Printf("Client[%s] connection write data is success...", c.conn.RemoteAddr())
+			mlog.Info.Printf("Client[%s] connection write gameData is success...", c.conn.RemoteAddr())
 		case <-c.chanIsClose:
 			return
 		}

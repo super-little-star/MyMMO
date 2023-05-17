@@ -269,6 +269,140 @@ func (x *DeleteCharacterResponse) GetCharacters() []*PCharacter {
 	return nil
 }
 
+type CharacterEnterGameResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Result    RESULT      `protobuf:"varint,1,opt,name=result,proto3,enum=ProtoMessage.RESULT" json:"result,omitempty"`
+	Error     Error       `protobuf:"varint,2,opt,name=error,proto3,enum=ProtoMessage.Error" json:"error,omitempty"`
+	Character *PCharacter `protobuf:"bytes,3,opt,name=character,proto3" json:"character,omitempty"`
+}
+
+func (x *CharacterEnterGameResponse) Reset() {
+	*x = CharacterEnterGameResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_response_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CharacterEnterGameResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CharacterEnterGameResponse) ProtoMessage() {}
+
+func (x *CharacterEnterGameResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_response_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CharacterEnterGameResponse.ProtoReflect.Descriptor instead.
+func (*CharacterEnterGameResponse) Descriptor() ([]byte, []int) {
+	return file_response_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CharacterEnterGameResponse) GetResult() RESULT {
+	if x != nil {
+		return x.Result
+	}
+	return RESULT_SUCCESS
+}
+
+func (x *CharacterEnterGameResponse) GetError() Error {
+	if x != nil {
+		return x.Error
+	}
+	return Error_None
+}
+
+func (x *CharacterEnterGameResponse) GetCharacter() *PCharacter {
+	if x != nil {
+		return x.Character
+	}
+	return nil
+}
+
+type MapCharacterEnterResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Result     RESULT        `protobuf:"varint,1,opt,name=result,proto3,enum=ProtoMessage.RESULT" json:"result,omitempty"`
+	Error      Error         `protobuf:"varint,2,opt,name=error,proto3,enum=ProtoMessage.Error" json:"error,omitempty"`
+	MapId      int32         `protobuf:"varint,3,opt,name=mapId,proto3" json:"mapId,omitempty"`
+	Characters []*PCharacter `protobuf:"bytes,4,rep,name=characters,proto3" json:"characters,omitempty"`
+}
+
+func (x *MapCharacterEnterResponse) Reset() {
+	*x = MapCharacterEnterResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_response_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MapCharacterEnterResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MapCharacterEnterResponse) ProtoMessage() {}
+
+func (x *MapCharacterEnterResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_response_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MapCharacterEnterResponse.ProtoReflect.Descriptor instead.
+func (*MapCharacterEnterResponse) Descriptor() ([]byte, []int) {
+	return file_response_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *MapCharacterEnterResponse) GetResult() RESULT {
+	if x != nil {
+		return x.Result
+	}
+	return RESULT_SUCCESS
+}
+
+func (x *MapCharacterEnterResponse) GetError() Error {
+	if x != nil {
+		return x.Error
+	}
+	return Error_None
+}
+
+func (x *MapCharacterEnterResponse) GetMapId() int32 {
+	if x != nil {
+		return x.MapId
+	}
+	return 0
+}
+
+func (x *MapCharacterEnterResponse) GetCharacters() []*PCharacter {
+	if x != nil {
+		return x.Characters
+	}
+	return nil
+}
+
 var File_response_proto protoreflect.FileDescriptor
 
 var file_response_proto_rawDesc = []byte{
@@ -314,10 +448,33 @@ var file_response_proto_rawDesc = []byte{
 	0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x18, 0x2e,
 	0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2e, 0x50, 0x43, 0x68,
 	0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x52, 0x0a, 0x63, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74,
-	0x65, 0x72, 0x73, 0x42, 0x2c, 0x5a, 0x1b, 0x2e, 0x2f, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65,
-	0x73, 0x73, 0x61, 0x67, 0x65, 0x3b, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61,
-	0x67, 0x65, 0xaa, 0x02, 0x0c, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67,
-	0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x72, 0x73, 0x22, 0xad, 0x01, 0x0a, 0x1a, 0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65,
+	0x72, 0x45, 0x6e, 0x74, 0x65, 0x72, 0x47, 0x61, 0x6d, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x12, 0x2c, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0e, 0x32, 0x14, 0x2e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67,
+	0x65, 0x2e, 0x52, 0x45, 0x53, 0x55, 0x4c, 0x54, 0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74,
+	0x12, 0x29, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32,
+	0x13, 0x2e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2e, 0x45,
+	0x72, 0x72, 0x6f, 0x72, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x12, 0x36, 0x0a, 0x09, 0x63,
+	0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x18,
+	0x2e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2e, 0x50, 0x43,
+	0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x52, 0x09, 0x63, 0x68, 0x61, 0x72, 0x61, 0x63,
+	0x74, 0x65, 0x72, 0x22, 0xc4, 0x01, 0x0a, 0x19, 0x4d, 0x61, 0x70, 0x43, 0x68, 0x61, 0x72, 0x61,
+	0x63, 0x74, 0x65, 0x72, 0x45, 0x6e, 0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x2c, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0e, 0x32, 0x14, 0x2e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
+	0x2e, 0x52, 0x45, 0x53, 0x55, 0x4c, 0x54, 0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x12,
+	0x29, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x13,
+	0x2e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2e, 0x45, 0x72,
+	0x72, 0x6f, 0x72, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x12, 0x14, 0x0a, 0x05, 0x6d, 0x61,
+	0x70, 0x49, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x6d, 0x61, 0x70, 0x49, 0x64,
+	0x12, 0x38, 0x0a, 0x0a, 0x63, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x73, 0x18, 0x04,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73,
+	0x61, 0x67, 0x65, 0x2e, 0x50, 0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x52, 0x0a,
+	0x63, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x73, 0x42, 0x2c, 0x5a, 0x1b, 0x2e, 0x2f,
+	0x50, 0x72, 0x6f, 0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x3b, 0x50, 0x72, 0x6f,
+	0x74, 0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0xaa, 0x02, 0x0c, 0x50, 0x72, 0x6f, 0x74,
+	0x6f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -332,34 +489,42 @@ func file_response_proto_rawDescGZIP() []byte {
 	return file_response_proto_rawDescData
 }
 
-var file_response_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_response_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_response_proto_goTypes = []interface{}{
-	(*RegisterResponse)(nil),        // 0: ProtoMessage.RegisterResponse
-	(*LoginResponse)(nil),           // 1: ProtoMessage.LoginResponse
-	(*CreateCharacterResponse)(nil), // 2: ProtoMessage.CreateCharacterResponse
-	(*DeleteCharacterResponse)(nil), // 3: ProtoMessage.DeleteCharacterResponse
-	(RESULT)(0),                     // 4: ProtoMessage.RESULT
-	(Error)(0),                      // 5: ProtoMessage.Error
-	(*PUser)(nil),                   // 6: ProtoMessage.PUser
-	(*PCharacter)(nil),              // 7: ProtoMessage.PCharacter
+	(*RegisterResponse)(nil),           // 0: ProtoMessage.RegisterResponse
+	(*LoginResponse)(nil),              // 1: ProtoMessage.LoginResponse
+	(*CreateCharacterResponse)(nil),    // 2: ProtoMessage.CreateCharacterResponse
+	(*DeleteCharacterResponse)(nil),    // 3: ProtoMessage.DeleteCharacterResponse
+	(*CharacterEnterGameResponse)(nil), // 4: ProtoMessage.CharacterEnterGameResponse
+	(*MapCharacterEnterResponse)(nil),  // 5: ProtoMessage.MapCharacterEnterResponse
+	(RESULT)(0),                        // 6: ProtoMessage.RESULT
+	(Error)(0),                         // 7: ProtoMessage.Error
+	(*PUser)(nil),                      // 8: ProtoMessage.PUser
+	(*PCharacter)(nil),                 // 9: ProtoMessage.PCharacter
 }
 var file_response_proto_depIdxs = []int32{
-	4,  // 0: ProtoMessage.RegisterResponse.result:type_name -> ProtoMessage.RESULT
-	5,  // 1: ProtoMessage.RegisterResponse.error:type_name -> ProtoMessage.Error
-	4,  // 2: ProtoMessage.LoginResponse.result:type_name -> ProtoMessage.RESULT
-	5,  // 3: ProtoMessage.LoginResponse.error:type_name -> ProtoMessage.Error
-	6,  // 4: ProtoMessage.LoginResponse.user:type_name -> ProtoMessage.PUser
-	4,  // 5: ProtoMessage.CreateCharacterResponse.result:type_name -> ProtoMessage.RESULT
-	5,  // 6: ProtoMessage.CreateCharacterResponse.error:type_name -> ProtoMessage.Error
-	7,  // 7: ProtoMessage.CreateCharacterResponse.characters:type_name -> ProtoMessage.PCharacter
-	4,  // 8: ProtoMessage.DeleteCharacterResponse.result:type_name -> ProtoMessage.RESULT
-	5,  // 9: ProtoMessage.DeleteCharacterResponse.error:type_name -> ProtoMessage.Error
-	7,  // 10: ProtoMessage.DeleteCharacterResponse.characters:type_name -> ProtoMessage.PCharacter
-	11, // [11:11] is the sub-list for method output_type
-	11, // [11:11] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	6,  // 0: ProtoMessage.RegisterResponse.result:type_name -> ProtoMessage.RESULT
+	7,  // 1: ProtoMessage.RegisterResponse.error:type_name -> ProtoMessage.Error
+	6,  // 2: ProtoMessage.LoginResponse.result:type_name -> ProtoMessage.RESULT
+	7,  // 3: ProtoMessage.LoginResponse.error:type_name -> ProtoMessage.Error
+	8,  // 4: ProtoMessage.LoginResponse.user:type_name -> ProtoMessage.PUser
+	6,  // 5: ProtoMessage.CreateCharacterResponse.result:type_name -> ProtoMessage.RESULT
+	7,  // 6: ProtoMessage.CreateCharacterResponse.error:type_name -> ProtoMessage.Error
+	9,  // 7: ProtoMessage.CreateCharacterResponse.characters:type_name -> ProtoMessage.PCharacter
+	6,  // 8: ProtoMessage.DeleteCharacterResponse.result:type_name -> ProtoMessage.RESULT
+	7,  // 9: ProtoMessage.DeleteCharacterResponse.error:type_name -> ProtoMessage.Error
+	9,  // 10: ProtoMessage.DeleteCharacterResponse.characters:type_name -> ProtoMessage.PCharacter
+	6,  // 11: ProtoMessage.CharacterEnterGameResponse.result:type_name -> ProtoMessage.RESULT
+	7,  // 12: ProtoMessage.CharacterEnterGameResponse.error:type_name -> ProtoMessage.Error
+	9,  // 13: ProtoMessage.CharacterEnterGameResponse.character:type_name -> ProtoMessage.PCharacter
+	6,  // 14: ProtoMessage.MapCharacterEnterResponse.result:type_name -> ProtoMessage.RESULT
+	7,  // 15: ProtoMessage.MapCharacterEnterResponse.error:type_name -> ProtoMessage.Error
+	9,  // 16: ProtoMessage.MapCharacterEnterResponse.characters:type_name -> ProtoMessage.PCharacter
+	17, // [17:17] is the sub-list for method output_type
+	17, // [17:17] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_response_proto_init() }
@@ -419,6 +584,30 @@ func file_response_proto_init() {
 				return nil
 			}
 		}
+		file_response_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CharacterEnterGameResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_response_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MapCharacterEnterResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -426,7 +615,7 @@ func file_response_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_response_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

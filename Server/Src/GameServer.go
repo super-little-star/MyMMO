@@ -2,6 +2,8 @@ package main
 
 import (
 	"mmo_server/DB"
+	"mmo_server/gameData"
+	"mmo_server/manager"
 	"mmo_server/network"
 	"mmo_server/services"
 	"mmo_server/utils/globalConfig"
@@ -18,6 +20,10 @@ type GGameServer struct {
 // Init 初始化GameServer
 func (gs *GGameServer) Init() {
 	gs.isRunning = false
+
+	if err := gameData.Init(); err != nil {
+		mlog.Error.Fatalf("Data Manager Init fail,error: %v !!!", err)
+	}
 	// 初始化网络服务
 	gs.NetServer = &network.GNetService{}
 	gs.NetServer.Init("tcp", "127.0.0.1:7788")
@@ -33,6 +39,8 @@ func (gs *GGameServer) Init() {
 	} else {
 		mlog.Info.Println("DB Init success ...")
 	}
+
+	manager.InitCharacterManager()
 
 	services.UserService().Start()
 }

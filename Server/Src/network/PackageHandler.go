@@ -57,18 +57,18 @@ func PackMessage(message *ProtoMessage.NetMessage) []byte {
 	//把Protobuf转化成字节流
 	marshal, err := proto.Marshal(message)
 	if err != nil {
-		mlog.Error.Println("Protobuf Marshal data is error : ", err)
+		mlog.Error.Println("Protobuf Marshal gameData is error : ", err)
 		return nil
 	}
 	ms := bytes.NewBuffer([]byte{})
 	//把字节长度写在数据头部
 	if err := binary.Write(ms, binary.LittleEndian, uint32(len(marshal))); err != nil {
-		mlog.Error.Println("binary write data is error : ", err)
+		mlog.Error.Println("binary write gameData is error : ", err)
 		return nil
 	}
 	//把protobuf字节流部分写到后面
 	if err := binary.Write(ms, binary.LittleEndian, marshal); err != nil {
-		mlog.Error.Println("binary write data is error : ", err)
+		mlog.Error.Println("binary write gameData is error : ", err)
 		return nil
 	}
 	return ms.Bytes()
