@@ -28,3 +28,11 @@ message CreateCharacterRequest {
 message DeleteCharacterRequest {
     int32 characterId = 1;
 }
+
+message CharacterEnterGameRequest {
+    int32 characterId = 1;
+}
+
+message MapCharacterEnterRequest {
+    int32 mapId = 1;
+}

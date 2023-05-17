@@ -22,6 +22,8 @@ message NetMessageRequest{
     LoginRequest Login = 2;
     CreateCharacterRequest CreateCharacter = 3;
     DeleteCharacterRequest DeleteCharacter = 4;
+    CharacterEnterGameRequest CharacterEnterGame = 5;
+    MapCharacterEnterRequest MapCharacterEnter = 6;
 }
 
 message NetMessageResponse{
@@ -29,6 +31,8 @@ message NetMessageResponse{
     LoginResponse Login = 2;
     CreateCharacterResponse CreateCharacter = 3;
     DeleteCharacterResponse DeleteCharacter = 4;
+    CharacterEnterGameResponse CharacterEnterGame = 5;
+    MapCharacterEnterResponse MapCharacterEnter = 6;
 }
 
 

@@ -34,3 +34,16 @@ message DeleteCharacterResponse {
     Error error = 2;
     repeated PCharacter characters = 3;
 }
+
+message CharacterEnterGameResponse {
+    RESULT result = 1;
+    Error error = 2;
+    PCharacter character = 3;
+}
+
+message MapCharacterEnterResponse {
+    RESULT result = 1;
+    Error error = 2;
+    int32 mapId = 3;
+    repeated PCharacter characters = 4;
+}
