@@ -17,5 +17,5 @@ for /f "delims=" %%i in ('dir /b /a-d /s %No_Sheet_EXCEL_FOLDER%\*.xlsx') do (
 
 
 xcopy .\json ..\Client\ClientProject\Assets\Resources\Data
-xcopy .\json ..\Server\Src\data
+xcopy .\json ..\Server\Src\gameData
 @pause
