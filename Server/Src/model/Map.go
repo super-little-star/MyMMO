@@ -14,14 +14,14 @@ var (
 )
 
 type Map struct {
-	data       *gameData.MapData
-	characters map[int32]*network.GConnection
+	data           *gameData.MapData
+	charactersConn map[int32]*network.GConnection
 }
 
 func NewMap(data *gameData.MapData) *Map {
 	return &Map{
-		data:       data,
-		characters: make(map[int32]*network.GConnection),
+		data:           data,
+		charactersConn: make(map[int32]*network.GConnection),
 	}
 }
 
@@ -39,7 +39,7 @@ func (m *Map) Enter(newOne *network.GConnection) error {
 	response.MapCharacterEnter = &ProtoMessage.MapCharacterEnterResponse{}
 
 	cs := response.MapCharacterEnter.Characters
-	for _, v := range m.characters {
+	for _, v := range m.charactersConn {
 		cs = append(cs, v.Session().Character.Proto)
 		if v.Session().Character != newOne.Session().Character {
 			// 通知地图其他玩家有新玩家进入
@@ -66,23 +66,23 @@ func (m *Map) AddCharacter(con *network.GConnection) error {
 		return ErrMapConnectionCharacterNotFound
 	}
 
-	if _, ok := m.characters[con.Session().Character.Db.ID]; ok {
+	if _, ok := m.charactersConn[con.Session().Character.Db.ID]; ok {
 		return ErrMapCharacterIsExist
 	}
 
 	char := con.Session().Character
 
 	char.MapId = m.data.ID
-	m.characters[char.Db.ID] = con
+	m.charactersConn[char.Db.ID] = con
 
 	return nil
 }
 
 // notifySomeCharacterEnter
 //
-//	@Description: 通知玩家有角色进入
+//	@Description: 通知地图内玩家有角色进入
 //	@receiver m
-//	@param receiver 被通知玩家的链接
+//	@param receiver 地图内玩家的链接
 //	@param entrant 新进入的角色
 //	@return error
 func (m *Map) notifySomeCharacterEnter(receiver *network.GConnection, entrant *object.Character) error {
