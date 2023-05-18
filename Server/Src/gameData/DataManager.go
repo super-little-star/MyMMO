@@ -12,7 +12,7 @@ var DataManager *GDataManager
 
 type GDataManager struct {
 	Characters map[int]*CharacterData
-	Map        map[int]*MapData
+	Maps       map[int]*MapData
 }
 
 func Init() error {
@@ -29,7 +29,7 @@ func Init() error {
 		return err
 	}
 
-	DataManager.Map, err = UnmarshalJson[MapData]()
+	DataManager.Maps, err = UnmarshalJson[MapData]()
 	if err != nil {
 		return err
 	}

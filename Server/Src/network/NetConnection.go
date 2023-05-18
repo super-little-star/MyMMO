@@ -156,5 +156,5 @@ func (c *GConnection) SendResponse() {
 	if data != nil {
 		c.chanSendData <- data
 	}
-	c.session.NetMsg = nil
+	c.session.CleanResponse()
 }

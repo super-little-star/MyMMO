@@ -9,9 +9,9 @@ import (
 // TODO 用户数据实体
 
 type GSession struct {
-	User      *DbObject.DbUser
-	NetMsg    *ProtoMessage.NetMessage
-	Character *object.Character
+	User         *DbObject.DbUser
+	NetMsg       *ProtoMessage.NetMessage
+	CurCharacter *object.Character // 当前角色
 }
 
 func NewSession() *GSession {
@@ -34,6 +34,10 @@ func (ns *GSession) GetNetResponse() *ProtoMessage.NetMessageResponse {
 		}
 	}
 	return ns.NetMsg.Response
+}
+
+func (ns *GSession) CleanResponse() {
+	ns.NetMsg = nil
 }
 
 // GetByteResponse 将Protobuf类型转换成Byte字节流

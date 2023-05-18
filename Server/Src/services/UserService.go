@@ -225,7 +225,16 @@ func (g *GUserService) OnCharacterEnterGame(sender *network.GConnection, msg int
 	sender.Session().GetNetResponse().CharacterEnterGame = &ProtoMessage.CharacterEnterGameResponse{}
 	sender.Session().GetNetResponse().CharacterEnterGame.Result = ProtoMessage.RESULT_SUCCESS
 	sender.Session().GetNetResponse().CharacterEnterGame.Character = character.Proto
-	sender.Session().Character = character
-
+	sender.Session().CurCharacter = character
 	sender.SendResponse()
+
+	curMap, err := manager.MapManager.GetMap(0)
+	if err != nil {
+		mlog.Error.Println(err)
+		return
+	}
+
+	if err := curMap.Enter(sender); err != nil {
+		mlog.Error.Println(err)
+	}
 }

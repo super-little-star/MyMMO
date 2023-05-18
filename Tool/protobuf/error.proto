@@ -11,9 +11,13 @@ package ProtoMessage;
 ////////////////////////////////////////////////////////////////
 enum Error {
     None = 0;
-    RegisterUserNameExist = 1;
-    LoginUserNotExist = 2;
-    LoginPasswordNotMatch = 3;
-    LoginUserIsOnline = 4;
-    CreateCharacterNameExist = 5;
+    RegisterUserNameExist = 1; // 注册用户名已存在
+
+    LoginUserNotExist = 2; // 登录用户名不存在
+    LoginPasswordNotMatch = 3; // 密码不正确
+    LoginUserIsOnline = 4; // 用户已登录
+
+    CreateCharacterNameExist = 5; // 创建角色名已存在
+
+    MapCharacterIsExist = 6; // 角色已在地图内
 }

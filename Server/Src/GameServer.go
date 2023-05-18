@@ -40,8 +40,11 @@ func (gs *GGameServer) Init() {
 		mlog.Info.Println("DB Init success ...")
 	}
 
+	// managers init
 	manager.InitCharacterManager()
+	manager.InitMapManager()
 
+	// services init
 	services.UserService().Start()
 }
 
@@ -62,6 +65,7 @@ func (gs *GGameServer) Stop() {
 // 更新GameServer逻辑处理
 func (gs *GGameServer) update() {
 	for gs.isRunning {
+		manager.MapManager.Update()        // 更新所有地图逻辑
 		time.Sleep(100 * time.Millisecond) // 每运行一次等待100毫秒
 	}
 }

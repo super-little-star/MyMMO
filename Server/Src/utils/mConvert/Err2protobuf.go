@@ -4,6 +4,7 @@ import (
 	"mmo_server/DB"
 	"mmo_server/ProtoMessage"
 	"mmo_server/manager"
+	"mmo_server/model"
 	"mmo_server/network"
 )
 
@@ -25,6 +26,8 @@ func Err2Protobuf(err error) ProtoMessage.Error {
 		return ProtoMessage.Error_LoginUserIsOnline
 	case DB.ErrCharacterNameExist: // 创建角色名已存在
 		return ProtoMessage.Error_CreateCharacterNameExist
+	case model.ErrMapCharacterIsExist: // 角色已在地图内
+		return ProtoMessage.Error_MapCharacterIsExist
 	default:
 		return ProtoMessage.Error_None
 	}

@@ -32,45 +32,48 @@ func NewMap(data *gameData.MapData) *Map {
 //	@param newOne 新玩家连接
 //	@return error
 func (m *Map) Enter(newOne *network.GConnection) error {
-	if err := m.AddCharacter(newOne); err != nil {
-		return err
-	}
 	response := newOne.Session().GetNetResponse()
 	response.MapCharacterEnter = &ProtoMessage.MapCharacterEnterResponse{}
 
+	if err := m.addCharacter(newOne); err != nil {
+		response.MapCharacterEnter.Result = ProtoMessage.RESULT_FAILED
+		response.MapCharacterEnter.Error = ProtoMessage.Error_MapCharacterIsExist
+		newOne.SendResponse()
+		return err
+	}
+
+	response.MapCharacterEnter.Result = ProtoMessage.RESULT_SUCCESS
 	cs := response.MapCharacterEnter.Characters
 	for _, v := range m.charactersConn {
-		cs = append(cs, v.Session().Character.Proto)
-		if v.Session().Character != newOne.Session().Character {
+		cs = append(cs, v.Session().CurCharacter.Proto)
+		if v.Session().CurCharacter != newOne.Session().CurCharacter {
 			// 通知地图其他玩家有新玩家进入
-			if err := m.notifySomeCharacterEnter(v, newOne.Session().Character); err != nil {
+			if err := m.notifySomeCharacterEnter(v, newOne.Session().CurCharacter); err != nil {
 				return nil
 			}
 		}
 	}
-
 	newOne.SendResponse()
-
 	return nil
 }
 
-// AddCharacter
+// addCharacter
 //
 //	@Description: 将玩家添加到地图map里
 //	@receiver m
 //	@param con
 //	@return error
-func (m *Map) AddCharacter(con *network.GConnection) error {
+func (m *Map) addCharacter(con *network.GConnection) error {
 	// 检查玩家是否已存在
-	if con.Session().Character == nil {
+	if con.Session().CurCharacter == nil {
 		return ErrMapConnectionCharacterNotFound
 	}
 
-	if _, ok := m.charactersConn[con.Session().Character.Db.ID]; ok {
+	if _, ok := m.charactersConn[con.Session().CurCharacter.Db.ID]; ok {
 		return ErrMapCharacterIsExist
 	}
 
-	char := con.Session().Character
+	char := con.Session().CurCharacter
 
 	char.MapId = m.data.ID
 	m.charactersConn[char.Db.ID] = con
@@ -96,4 +99,8 @@ func (m *Map) notifySomeCharacterEnter(receiver *network.GConnection, entrant *o
 
 	receiver.SendResponse()
 	return nil
+}
+
+func (m *Map) Update() {
+
 }

@@ -18,6 +18,7 @@ namespace ProtoMessage
         LoginPasswordNotMatch = 3,
         LoginUserIsOnline = 4,
         CreateCharacterNameExist = 5,
+        MapCharacterIsExist = 6,
     }
 
 }
